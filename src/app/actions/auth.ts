@@ -58,8 +58,19 @@ export async function signUp(
     return { status: "error", message: error.message };
   }
 
-  // If email confirmation is enabled, Supabase returns no session.
+  // With email autoconfirm enabled, the account is created and confirmed
+  // server-side but the session may not be returned. Try signing in directly.
   if (!data.session) {
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email: parsed.data.email,
+      password: parsed.data.password,
+    });
+
+    if (!signInError) {
+      revalidatePath("/", "layout");
+      redirect("/onboarding");
+    }
+
     return {
       status: "success",
       email: parsed.data.email,
