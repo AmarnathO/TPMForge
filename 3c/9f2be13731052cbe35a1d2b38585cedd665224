@@ -1,0 +1,78 @@
+src/components/waitlist-form.tsx
+  s_9b7382b5b7b0d1::t_f6bfabb319bc41 1-3,5-15,21,23-26,28,30-34,36,46-49,55-57,62-65,80-82
+  s_9b7382b5b7b0d1::t_a3b9db87c40b6a 4,16-20,22,27,29,35,37-45,50-54,58-61,66-79
+src/app/login/page.tsx
+  s_9b7382b5b7b0d1::t_814640c646bb34 1-8,15-25,27-30
+  s_9b7382b5b7b0d1::t_a81bd5fd13fc63 9-14,26
+src/components/app-shell.tsx
+  s_9b7382b5b7b0d1::t_519b74439ba704 1-43,57-62
+  s_9b7382b5b7b0d1::t_1983321f3ea6e3 44-56
+src/app/signup/page.tsx
+  s_9b7382b5b7b0d1::t_8c0b14733cae3b 1-8,15-25,27-30
+  s_9b7382b5b7b0d1::t_e975cbc6c3f989 9-14,26
+package.json
+  s_9b7382b5b7b0d1::t_6775e336196c83 12-15,18-20
+src/app/actions/onboarding.ts
+  s_9b7382b5b7b0d1::t_400fd06a2a3786 1-84
+src/app/auth/callback/route.ts
+  s_9b7382b5b7b0d1::t_332c8cd2699c95 1-19
+supabase/migrations/0001_init.sql
+  s_9b7382b5b7b0d1::t_303fb4ab09d3fb 1-83
+src/app/actions/waitlist.ts
+  s_9b7382b5b7b0d1::t_c3da14c1059a99 1-59
+src/app/actions/auth.ts
+  s_9b7382b5b7b0d1::t_1c00112585de86 1-148
+src/app/globals.css
+  s_9b7382b5b7b0d1::t_e6bf04236ab3a1 4-5,15-16,22-147
+src/app/layout.tsx
+  s_9b7382b5b7b0d1::t_c614ab631c95b9 16-35
+.env.local.example
+  s_9b7382b5b7b0d1::t_765a1814c88600 1-14
+.gitignore
+  s_9b7382b5b7b0d1::t_ed0e19329fb8ae 35
+src/app/onboarding/page.tsx
+  s_9b7382b5b7b0d1::t_bf46c24f93067b 1-34
+src/proxy.ts
+  s_9b7382b5b7b0d1::t_747da7955f1ea6 1-71
+src/lib/supabase/server.ts
+  s_9b7382b5b7b0d1::t_8bdcbd1d975b1e 1-28
+src/app/page.tsx
+  s_9b7382b5b7b0d1::t_23dfd3d1fe988e 587
+  s_9b7382b5b7b0d1::t_c8203dfb1ec894 10-19,22,28,30-32,38-39,45-46,52-53,56-63,67-81,85-117,119,133-142,147,149-152,155,158-173,175,179,181,185,187,195-244,246-247,251-260,268-303,305,310-379,384-392,394-432,434-447,449-513,515-526,528-586,588-603,605-618,620-626,633-656
+  s_9b7382b5b7b0d1::t_0d231a6ec6ba42 1-9,20-21,23-27,29,33-37,40-44,47-51,54-55,64-66,82-84,118,120-132,143,148,153-154,156-157,174,176-178,182-184,188-194,245,248-250,261-267,304,306,308-309,380-383,433,448,514,527
+  s_9b7382b5b7b0d1::t_ee05a1f688c85f 627-632
+src/lib/utils.ts
+  s_9b7382b5b7b0d1::t_b8db82172fdf40 1-14
+src/lib/supabase/client.ts
+  s_9b7382b5b7b0d1::t_5865a7c9e476cb 1-10
+src/components/onboarding-form.tsx
+  s_9b7382b5b7b0d1::t_726bf4fdb4c2d5 1-148
+src/app/dashboard/page.tsx
+  s_9b7382b5b7b0d1::t_41efacc68b91ac 1-111
+src/components/auth-form.tsx
+  s_9b7382b5b7b0d1::t_ca537075eba100 92
+  s_9b7382b5b7b0d1::t_82b54e673db2ee 100
+  s_9b7382b5b7b0d1::t_831e83cbbc7351 1-4,37-47,49-50,52-91,93-99,101-174
+  s_9b7382b5b7b0d1::t_86bef15e661477 5-36
+  s_9b7382b5b7b0d1::t_52b52ddb0401bc 48,51
+src/components/reveal.tsx
+  s_9b7382b5b7b0d1::t_06f0e2ec16ad20 1-46
+package-lock.json
+  s_9b7382b5b7b0d1::t_f5a12e79025709 11-14,17-19,1393-1496,2966-2974,3009-3021,4309-4317,5299-5307,6525-6534
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "3c9f2be13731052cbe35a1d2b38585cedd665224",
+  "prompts": {},
+  "sessions": {
+    "s_9b7382b5b7b0d1": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_0281697f1ffennuLtHOO7dvmcF",
+        "model": "deepseek-v4-flash-free"
+      },
+      "human_author": "Amarnath Ojha <amarnathojha071@gmail.com>"
+    }
+  }
+}
