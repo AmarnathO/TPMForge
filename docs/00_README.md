@@ -97,7 +97,7 @@
 | Decision | Value |
 |----------|-------|
 | **MVP Free Tier** | Resume → Readiness Score + Radar + Gap, 2-week sample roadmap, limited assessment |
-| **MVP Pro Tier** | ₹999/mo intro (→ ₹2,000), AI Coach + Full Roadmap + Full Assessments + Dashboard |
+| **Pricing** | Membership ₹2,000/mo or ₹1,600/mo annual (billed ₹19,200/yr) |
 | **Content at Launch** | 30–40 competencies (5 hand-worked quality bar + AI-drafted, review-gated) |
 | **LLM Strategy** | OpenRouter free models only; queue/cache/fallback in AI client; pre-generated content |
 | **PII Handling** | User's own resume data, consent accepted; free-model logging acknowledged |

@@ -65,7 +65,7 @@ export async function completeOnboarding(
   const { error } = await supabase
     .from("profiles")
     .update({
-      current_role: parsed.data.currentRole,
+      current_work_role: parsed.data.currentRole,
       target_role: parsed.data.targetRole,
       timeline_weeks: parsed.data.timelineWeeks,
       weekly_hours: parsed.data.weeklyHours,

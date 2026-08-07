@@ -8,7 +8,7 @@ create table if not exists public.profiles (
   full_name text,
   avatar_url text,
   headline text,
-  current_role text,
+  current_work_role text,
   target_role text,
   target_companies text[] default '{}',
   timeline_weeks int,

@@ -82,8 +82,7 @@ export default async function DashboardPage() {
         </div>
 
         <p className="mt-10 text-xs text-zinc-600">
-          Pro upgrade starts at {formatINR(999)}/mo — early-bird pricing for
-          founding members.
+          Membership from {formatINR(1600)}/mo with annual billing.
         </p>
       </div>
     </AppShell>

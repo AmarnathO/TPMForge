@@ -44,11 +44,11 @@ This is the single source of truth for product phases, MVP definition, launch se
 
 **Goal:** Soft-launch free diagnostic to 100 users. Validate graph quality + score accuracy.
 
-### P1 — Foundation & Waitlist (Week 5)
-- Landing page with value prop, email capture, waitlist position
+### P1 — Foundation & Landing (Week 5)
+- Landing page with value prop + signup CTA
 - Supabase project: Postgres + pgvector + Auth configured
 - Vercel project connected, preview deployments working
-- Admin: waitlist CSV export, basic analytics
+- Admin: basic analytics
 
 ### P2 — Auth & Onboarding (Week 6)
 - Supabase Auth: email/password, OAuth (GitHub, Google, LinkedIn)
@@ -73,14 +73,14 @@ This is the single source of truth for product phases, MVP definition, launch se
 - **Gap Report:** ranked missing competencies vs target role
 - **2-Week Sample Roadmap:** graph-sourced, week-by-week
 - Shareable report URL (public token)
-- Soft launch: 100 waitlist users invited
+- Soft launch: 100 users invited
 - **Exit Criteria:** 100 users complete flow, NPS > 40, < 5% parse failures, score consistency > 80% vs manual review
 
 ---
 
 ## Phase B — Pro Monetization (Weeks 11–18)
 
-**Goal:** Flip Pro tier at ₹999/mo intro. Acquire first paying users.
+**Goal:** Launch membership at ₹2,000/mo (₹1,600/mo annual). Acquire first paying users.
 
 ### P5 — Roadmap Engine (Week 11–12)
 - **Input:** User profile + assessment scores + target role + timeline + weekly hours
@@ -107,10 +107,10 @@ This is the single source of truth for product phases, MVP definition, launch se
 - **Daily/Weekly challenge:** Graph-sourced, rotating
 
 ### P8 — Payments & Plans (Week 17–18)
-- Razorpay integration: Subscription (₹999/mo), Webhook handling
-- Plan limits: Free (3 assessments/mo, sample roadmap, no coach) vs Pro (unlimited)
+- Razorpay integration: Subscription (₹2,000/mo or ₹1,600/mo annual), Webhook handling
+- Plan limits: member vs guest preview (sample roadmap, 3 free coach msgs)
 - Subscription portal: Upgrade, cancel, billing history, invoice download
-- **Intro pricing badge:** "Founding Member — ₹999/mo (regular ₹2,000) — expires at 50 users or 60 days"
+- **Membership offer:** ₹2,000/mo monthly, ₹1,600/mo annual (billed ₹19,200/yr)
 - **Exit Criteria:** 10+ paying users, < 2% payment failure rate, coach session/day > 2/user
 
 ---
@@ -284,19 +284,18 @@ Speech → Transcript (Whisper/Web Speech API) → Evaluation (rubric) → Follo
 ## MVP Definition (Lean, Valuable, Shippable)
 
 ### What IS in MVP (Phases A+B)
-| Piece | Free | Pro (₹999 intro) |
-|-------|------|------------------|
-| Landing + Waitlist | ✅ | — |
-| Auth + Onboarding | ✅ | — |
-| Resume Upload + Parse | ✅ | — |
-| Readiness Score + Radar + Gap | ✅ | — |
-| 2-Week Sample Roadmap | ✅ | — |
-| Limited Assessment (3/mo) | ✅ | — |
-| Full Roadmap | — | ✅ |
-| AI Coach (chat) | — | ✅ |
-| Full Assessment Practice | — | ✅ |
-| Dashboard + Progress | — | ✅ |
-| Payments (Razorpay) | — | ✅ |
+| Piece | Included |
+|-------|----------|
+| Landing + Signup | ✅ |
+| Auth + Onboarding | ✅ |
+| Resume Upload + Parse | ✅ |
+| Readiness Score + Radar + Gap | ✅ |
+| 2-Week Sample Roadmap | ✅ |
+| Full Roadmap | ✅ |
+| AI Coach (chat) | ✅ |
+| Full Assessment Practice | ✅ |
+| Dashboard + Progress | ✅ |
+| Payments (Razorpay ₹2,000/mo · ₹1,600/mo annual) | ✅ |
 
 ### What is NOT in MVP (Deferred)
 - Blog/Newsletter (Phase C)
@@ -331,8 +330,8 @@ Speech → Transcript (Whisper/Web Speech API) → Evaluation (rubric) → Follo
 |-------|----------------|--------|
 | Phase A | Free diagnostic completion rate | > 60% of signups |
 | Phase A | Readiness score NPS | > 40 |
-| Phase B | Free → Pro conversion | > 5% within 30 days |
-| Phase B | Pro MRR | ₹50,000/mo (50 users @ ₹999) |
+| Phase B | Membership conversion | > 5% of signups within 30 days |
+| Phase B | MRR | ₹80,000/mo (40 users @ ₹2,000) |
 | Phase C | Weekly active learners (Pro) | > 40% |
 | Phase C | Newsletter open rate | > 35% |
 | Phase 2 | Competency mastery rate | > 30% of started |

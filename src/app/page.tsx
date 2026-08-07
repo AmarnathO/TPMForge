@@ -6,7 +6,6 @@ import {
   ClipboardCheck,
   Users,
   ArrowRight,
-  Sparkles,
   MessagesSquare,
   BookOpen,
   FolderKanban,
@@ -18,9 +17,8 @@ import {
   CheckCircle2,
   Mail,
 } from "lucide-react";
-import { WaitlistForm } from "@/components/waitlist-form";
 import { Reveal } from "@/components/reveal";
-import { cn } from "@/lib/utils";
+import { cn, formatINR } from "@/lib/utils";
 
 const features = [
   {
@@ -184,7 +182,7 @@ export default function Home() {
               href="/signup"
               className="relative overflow-hidden rounded-lg bg-gradient-to-r from-indigo-600 to-violet-600 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-indigo-600/25 transition hover:brightness-110"
             >
-              Start free
+              Get started
             </Link>
           </div>
         </nav>
@@ -222,8 +220,21 @@ export default function Home() {
             </Reveal>
 
             <Reveal delay={240}>
-              <div className="mt-10 flex justify-center lg:justify-start">
-                <WaitlistForm />
+              <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center lg:justify-start">
+                <Link
+                  href="/signup"
+                  className="relative overflow-hidden rounded-full bg-gradient-to-r from-indigo-600 via-violet-600 to-indigo-600 px-8 py-3.5 text-sm font-semibold text-white shadow-xl shadow-indigo-600/30 transition hover:brightness-110 btn-shimmer"
+                >
+                  <span className="relative z-10 inline-flex items-center gap-2">
+                    Get started <ArrowRight className="h-4 w-4" />
+                  </span>
+                </Link>
+                <a
+                  href="#pricing"
+                  className="rounded-full border border-zinc-700 px-8 py-3.5 text-sm font-medium text-zinc-300 transition hover:border-zinc-500 hover:text-zinc-100"
+                >
+                  See membership
+                </a>
               </div>
             </Reveal>
 
@@ -384,54 +395,101 @@ export default function Home() {
       {/* PRICING */}
       <section id="pricing" className="mx-auto max-w-7xl scroll-mt-20 px-6 py-28">
         <Reveal>
-          <div
-            className={cn(
-              "relative overflow-hidden rounded-[2rem] border border-white/10",
-              "bg-gradient-to-br from-zinc-900 via-zinc-950 to-indigo-950/50",
-              "px-8 py-16 text-center sm:px-16"
-            )}
-          >
-            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(99,102,241,0.15),transparent_60%)]" />
-            <div className="relative">
-              <div className="mx-auto mb-6 inline-flex items-center gap-2 rounded-full border border-indigo-500/40 bg-indigo-500/10 px-4 py-1.5 text-xs font-semibold text-indigo-300">
-                <Sparkles className="h-3.5 w-3.5" />
-                Founding member pricing — locked in for life
-              </div>
-              <h2 className="text-4xl font-bold tracking-tight text-zinc-50 sm:text-5xl">
-                ₹999
-                <span className="text-xl font-medium text-zinc-400">/month</span>
-              </h2>
-              <p className="mx-auto mt-4 max-w-2xl text-lg text-zinc-400">
-                Unlimited AI Coach, full assessments, personalized roadmap, and
-                dashboard. Regular price ₹2,000/mo after launch — join the
-                waitlist to lock in the founding rate.
+          <div className="mx-auto max-w-2xl text-center">
+            <p className="text-sm font-semibold uppercase tracking-widest text-indigo-400">
+              Membership
+            </p>
+            <h2 className="mt-3 text-3xl font-bold tracking-tight text-zinc-50 sm:text-4xl">
+              Simple, honest pricing
+            </h2>
+            <p className="mt-4 text-lg text-zinc-400">
+              One membership. Every feature — coach, assessments, roadmap, and
+              dashboard. Cancel anytime.
+            </p>
+          </div>
+        </Reveal>
+
+        <div className="mx-auto mt-14 grid max-w-4xl gap-6 md:grid-cols-2">
+          <Reveal delay={100}>
+            <div className="flex h-full flex-col rounded-[1.5rem] border border-white/10 bg-white/[0.03] p-8">
+              <h3 className="text-sm font-semibold text-zinc-200">
+                Monthly membership
+              </h3>
+              <p className="mt-4 text-4xl font-bold tracking-tight text-zinc-50">
+                {formatINR(2000)}
+                <span className="text-lg font-medium text-zinc-400">/month</span>
               </p>
-              <div className="mt-8 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm text-zinc-400">
+              <p className="mt-2 text-sm text-zinc-500">Billed monthly</p>
+              <ul className="mt-8 flex flex-1 flex-col gap-3 text-sm text-zinc-400">
                 {[
                   "Unlimited AI Coach",
-                  "Full assessments",
+                  "Full competency assessments",
                   "Personalized roadmap",
+                  "Readiness dashboard",
                   "Cancel anytime",
                 ].map((item) => (
-                  <span key={item} className="flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+                  <li key={item} className="flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400" />
                     {item}
-                  </span>
+                  </li>
                 ))}
-              </div>
-              <div className="mt-10 flex justify-center">
+              </ul>
+              <Link
+                href="/signup"
+                className="mt-8 rounded-full border border-zinc-700 px-6 py-3 text-center text-sm font-semibold text-zinc-200 transition hover:border-zinc-500 hover:text-zinc-50"
+              >
+                Choose monthly
+              </Link>
+            </div>
+          </Reveal>
+
+          <Reveal delay={200}>
+            <div
+              className={cn(
+                "relative flex h-full flex-col overflow-hidden rounded-[1.5rem] p-8",
+                "border border-indigo-500/40 bg-gradient-to-br from-indigo-950/50 via-zinc-900/60 to-zinc-950"
+              )}
+            >
+              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(99,102,241,0.15),transparent_60%)]" />
+              <div className="relative">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-semibold text-zinc-200">
+                    Annual membership
+                  </h3>
+                  <span className="rounded-full bg-indigo-500/15 px-3 py-1 text-xs font-semibold text-indigo-300">
+                    Save 20%
+                  </span>
+                </div>
+                <p className="mt-4 text-4xl font-bold tracking-tight text-zinc-50">
+                  {formatINR(1600)}
+                  <span className="text-lg font-medium text-zinc-400">/month</span>
+                </p>
+                <p className="mt-2 text-sm text-zinc-500">
+                  Billed {formatINR(19200)} annually
+                </p>
+                <ul className="mt-8 flex flex-1 flex-col gap-3 text-sm text-zinc-400">
+                  {[
+                    "Everything in monthly",
+                    "Two months free",
+                    "Priority support",
+                    "Future feature access",
+                  ].map((item) => (
+                    <li key={item} className="flex items-center gap-2">
+                      <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
                 <Link
                   href="/signup"
-                  className="relative overflow-hidden rounded-full bg-gradient-to-r from-indigo-600 via-violet-600 to-indigo-600 px-8 py-3.5 text-sm font-semibold text-white shadow-xl shadow-indigo-600/30 transition hover:brightness-110 btn-shimmer"
+                  className="relative z-10 mt-8 block overflow-hidden rounded-full bg-gradient-to-r from-indigo-600 via-violet-600 to-indigo-600 px-6 py-3 text-center text-sm font-semibold text-white shadow-lg shadow-indigo-600/25 transition hover:brightness-110 btn-shimmer"
                 >
-                  <span className="relative z-10 inline-flex items-center gap-2">
-                    Start free <ArrowRight className="h-4 w-4" />
-                  </span>
+                  <span className="relative z-10">Choose annual</span>
                 </Link>
               </div>
             </div>
-          </div>
-        </Reveal>
+          </Reveal>
+        </div>
       </section>
 
       {/* FOOTER */}

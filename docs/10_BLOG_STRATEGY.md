@@ -43,7 +43,7 @@ Every article ends with CTA → free readiness assessment for that competency
 - Editorial calendar in `blog_posts` table (status: draft → published)
 
 ## MVP Scope
-Deferred to Phase C (P10). Landing page waitlist is the pre-launch acquisition channel.
+Deferred to Phase C (P10). Landing page signup is the acquisition channel.
 
 ## KPIs
 | Metric | Target |

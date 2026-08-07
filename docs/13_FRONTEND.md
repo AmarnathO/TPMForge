@@ -8,7 +8,7 @@ Next.js 14 (App Router) + TypeScript + Tailwind CSS + shadcn/ui, deployed on Ver
 apps/web/
   app/
     (marketing)/
-      page.tsx                  # Landing + waitlist
+      page.tsx                  # Landing
       blog/
         [slug]/page.tsx         # Blog post (MDX)
       pricing/page.tsx
@@ -41,7 +41,7 @@ apps/web/
 
 | Page | Data | Fetching |
 |------|------|----------|
-| Landing | static + waitlist form | Server component, `revalidate=3600` |
+| Landing | static + signup CTA | Server component, `revalidate=3600` |
 | Dashboard | readiness, radar, gaps | Server component + Supabase query |
 | Roadmap | weeks + items | Server component + Supabase |
 | Coach | session transcript | Client + SSE streaming |
@@ -51,8 +51,7 @@ apps/web/
 ## Authentication Flow
 - `@supabase/ssr` middleware → refresh session
 - Guard `(app)/*` → redirect to `/auth` if no session
-- Pro gate: middleware checks `subscriptions.tier` (server-side)
-- Waitlist users: `newsletter_subscribers` table, upsert on landing form
+- Member gate: middleware checks `subscriptions.tier` (server-side)
 
 ## State Management
 - Server Components default (RSC) — minimal client state
@@ -86,7 +85,7 @@ apps/web/
 - Playwright for critical flows (signup → resume → dashboard)
 
 ## MVP Page Checklist (Phases A/B)
-- [ ] Landing (waitlist capture)
+- [ ] Landing (signup CTA + pricing)
 - [ ] Auth pages
 - [ ] Onboarding (role, target, timeline)
 - [ ] Resume upload + analysis result (radar, score, gaps)
@@ -94,7 +93,7 @@ apps/web/
 - [ ] Roadmap view (sample → full Pro)
 - [ ] Coach chat (Pro)
 - [ ] Assessment runner (MCQ + scenario)
-- [ ] Pricing page (₹999 founding member)
+- [ ] Pricing page (₹2,000/mo · ₹1,600/mo annual)
 - [ ] Settings (profile, subscription, consent toggle)
 
 ---
