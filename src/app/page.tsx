@@ -45,6 +45,13 @@ const features = [
     phase: "Live",
   },
   {
+    icon: LineChart,
+    title: "Progress Dashboard",
+    description:
+      "Track readiness trendlines, practice evidence, and coaching activity as you move toward your target role.",
+    phase: "Live",
+  },
+  {
     icon: ClipboardCheck,
     title: "Competency Assessments",
     description:

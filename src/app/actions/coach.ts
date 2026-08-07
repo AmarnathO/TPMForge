@@ -18,12 +18,49 @@ export type CoachMessage = {
 export type CoachState = {
   status: "idle" | "success" | "error";
   messages: CoachMessage[];
+  conversationId?: string;
   error?: string;
   model?: string;
 };
 
 const MAX_MESSAGE_LENGTH = 2000;
 const HISTORY_LIMIT = 8;
+
+type CoachDB = Awaited<ReturnType<typeof createClient>>;
+
+async function newConversation(
+  supabase: CoachDB,
+  userId: string
+): Promise<string> {
+  const { data, error } = await supabase
+    .from("coach_conversations")
+    .insert({ user_id: userId, title: "Coach conversation" })
+    .select("id")
+    .single();
+  if (error) throw error;
+  return data.id;
+}
+
+async function persistMessages(
+  supabase: CoachDB,
+  conversationId: string,
+  messages: CoachMessage[]
+): Promise<void> {
+  const { error } = await supabase.from("coach_messages").insert(
+    messages.map((m) => ({
+      conversation_id: conversationId,
+      role: m.role,
+      content: m.content,
+    }))
+  );
+  if (error) {
+    console.error("[coach] persist failed:", error);
+  }
+  await supabase
+    .from("coach_conversations")
+    .update({ updated_at: new Date().toISOString() })
+    .eq("id", conversationId);
+}
 
 function matchCompetencies(
   message: string,
@@ -116,18 +153,25 @@ export async function coachChat(
     return {
       status: "error",
       messages: prev.messages,
+      conversationId: prev.conversationId,
       error: "Please sign in first.",
     };
   }
 
   const rawMessage = String(formData.get("message") ?? "").trim();
   if (formData.get("intent") === "reset") {
-    return { status: "idle", messages: [] };
+    const conversationId = await newConversation(supabase, user.id);
+    return { status: "idle", messages: [], conversationId };
   }
   if (!rawMessage) {
-    return { status: "error", messages: prev.messages, error: "Type a message first." };
+    return { status: "error", messages: prev.messages, conversationId: prev.conversationId, error: "Type a message first." };
   }
   const message = rawMessage.slice(0, MAX_MESSAGE_LENGTH);
+
+  let conversationId = prev.conversationId;
+  if (!conversationId) {
+    conversationId = await newConversation(supabase, user.id);
+  }
 
   const latest = await getLatestAnalysis(supabase, user.id);
   const gapReport = (latest?.gap_report ?? {}) as {
@@ -171,12 +215,25 @@ export async function coachChat(
     model = result.model;
   } catch (err) {
     console.error("[coach] completion failed:", err);
+    if (conversationId && message) {
+      await persistMessages(supabase, conversationId, [
+        { role: "user", content: message },
+      ]);
+    }
     return {
       status: "error",
       messages: [...prev.messages, { role: "user", content: message }],
+      conversationId,
       error:
         "The AI coach is temporarily unavailable (free models can throttle). Try again in a minute.",
     };
+  }
+
+  if (conversationId) {
+    await persistMessages(supabase, conversationId, [
+      { role: "user", content: message },
+      { role: "assistant", content: reply },
+    ]);
   }
 
   return {
@@ -186,6 +243,7 @@ export async function coachChat(
       { role: "user", content: message },
       { role: "assistant", content: reply },
     ],
+    conversationId,
     model,
   };
 }

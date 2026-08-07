@@ -10,10 +10,8 @@ import {
   Sparkles,
   RotateCcw,
 } from "lucide-react";
-import { coachChat, type CoachState } from "@/app/actions/coach";
+import { coachChat, type CoachMessage } from "@/app/actions/coach";
 import { cn } from "@/lib/utils";
-
-const initialState: CoachState = { status: "idle", messages: [] };
 
 const SUGGESTIONS = [
   "What should I learn first based on my gaps?",
@@ -39,8 +37,20 @@ function renderContent(content: string) {
   );
 }
 
-export function CoachChat({ hasAnalysis }: { hasAnalysis: boolean }) {
-  const [state, formAction, pending] = useActionState(coachChat, initialState);
+export function CoachChat({
+  hasAnalysis,
+  initialMessages = [],
+  initialConversationId,
+}: {
+  hasAnalysis: boolean;
+  initialMessages?: CoachMessage[];
+  initialConversationId?: string;
+}) {
+  const [state, formAction, pending] = useActionState(coachChat, {
+    status: "idle",
+    messages: initialMessages,
+    conversationId: initialConversationId,
+  });
   const [draft, setDraft] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -152,7 +162,6 @@ export function CoachChat({ hasAnalysis }: { hasAnalysis: boolean }) {
         action={formAction}
         className="border-t border-zinc-800 p-4"
         onSubmit={() => {
-          // reset the field; state update is async via useActionState
           setTimeout(() => setDraft(""), 0);
         }}
       >
