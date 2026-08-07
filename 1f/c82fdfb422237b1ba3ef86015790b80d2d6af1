@@ -1,0 +1,56 @@
+src/app/actions/onboarding.ts
+  s_9b7382b5b7b0d1::t_49f2c331cd9493 68
+src/app/dashboard/page.tsx
+  s_9b7382b5b7b0d1::t_1acea61ad954f7 85
+supabase/migrations/0002_remove_waitlist.sql
+  s_9b7382b5b7b0d1::t_f39d2c8c8d63dd 1-2
+docs/02_PLAN.md
+  s_9b7382b5b7b0d1::t_7898e4ea52e1df 110-111,113
+  s_9b7382b5b7b0d1::t_ea60b8f10d2ed5 287-298
+  s_9b7382b5b7b0d1::t_f2001122e3b3c6 47-48,51
+  s_9b7382b5b7b0d1::t_46f52753c6bfba 333-334
+  s_9b7382b5b7b0d1::t_92210a678bc109 83
+  s_9b7382b5b7b0d1::t_9e511ba03fbe66 76
+docs/10_BLOG_STRATEGY.md
+  s_9b7382b5b7b0d1::t_95186a4089de99 46
+.gitignore
+  s_9b7382b5b7b0d1::t_ba5514e95b2f24 18-20
+docs/20_MONETIZATION.md
+  s_9b7382b5b7b0d1::t_585643b48bda99 3,5,7,9-11,19,32,36-37,39,44-46,52-53,56,60,68,72
+docs/15_MVP.md
+  s_9b7382b5b7b0d1::t_ad184015c143e4 62,65,67-68,71
+  s_9b7382b5b7b0d1::t_cce9ea9f4e075d 16,18,21-22,24
+  s_9b7382b5b7b0d1::t_4d32da71c11d28 36-48
+  s_9b7382b5b7b0d1::t_e3fde413dcb1a5 4,8,11,14
+supabase/migrations/0001_init.sql
+  s_9b7382b5b7b0d1::t_fdc67372666956 11
+docs/00_README.md
+  s_9b7382b5b7b0d1::t_919e70806ab1ee 100
+docs/13_FRONTEND.md
+  s_9b7382b5b7b0d1::t_b8cecaccc459a0 88
+  s_9b7382b5b7b0d1::t_433fcdf320f0ac 11
+  s_9b7382b5b7b0d1::t_5000c4e6516fb5 44
+  s_9b7382b5b7b0d1::t_5341871aa70114 96
+  s_9b7382b5b7b0d1::t_7127b1a6238311 54
+src/app/page.tsx
+  s_9b7382b5b7b0d1::t_be8749c05bfd3a 185
+  s_9b7382b5b7b0d1::t_0058b2d6104a69 398-420,422-423,426,428,431-432,434,436-482,485,487,491-492
+  s_9b7382b5b7b0d1::t_a687e073963688 223-237
+  s_9b7382b5b7b0d1::t_0eb62211be4508 21
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "1fc82fdfb422237b1ba3ef86015790b80d2d6af1",
+  "prompts": {},
+  "sessions": {
+    "s_9b7382b5b7b0d1": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_0281697f1ffennuLtHOO7dvmcF",
+        "model": "deepseek-v4-flash-free"
+      },
+      "human_author": "Amarnath Ojha <amarnathojha071@gmail.com>"
+    }
+  }
+}
