@@ -1,0 +1,41 @@
+packages/core/test/practice.test.ts
+  s_9b7382b5b7b0d1::t_22ef875c784487 106
+  s_9b7382b5b7b0d1::t_78c0b6671b24ee 1-19,21-105,107-157
+  s_9b7382b5b7b0d1::t_10e7dae213b931 20
+packages/core/src/llm/practice.ts
+  s_9b7382b5b7b0d1::t_d33f5b351870b5 1-220
+packages/core/test/_integration.test.ts
+  s_9b7382b5b7b0d1::t_808f3fa2b926da 121-160
+  s_9b7382b5b7b0d1::t_3e2259cff8c13e 8-9,13
+src/app/actions/practice.ts
+  s_9b7382b5b7b0d1::t_88983a33b92d3f 1-212
+packages/core/src/llm/index.ts
+  s_9b7382b5b7b0d1::t_7ded47f986a3b3 5
+src/app/dashboard/practice/page.tsx
+  s_9b7382b5b7b0d1::t_2f62b1cf5aba72 1-47
+src/components/app-shell.tsx
+  s_9b7382b5b7b0d1::t_240d6aa7a9f5b6 18
+src/components/practice-studio.tsx
+  s_9b7382b5b7b0d1::t_116666d74c7d1a 1-14,16-375
+  s_9b7382b5b7b0d1::t_db1ec33ed771fd 15
+supabase/migrations/0004_practice_attempts.sql
+  s_9b7382b5b7b0d1::t_7b39ce26fce4d4 1-29
+src/app/page.tsx
+  s_9b7382b5b7b0d1::t_7c044a0ffa6b5c 51-52
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "ab05e580a57fe74a981e038c30c0950309c4a5fc",
+  "prompts": {},
+  "sessions": {
+    "s_9b7382b5b7b0d1": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_0281697f1ffennuLtHOO7dvmcF",
+        "model": "deepseek-v4-flash-free"
+      },
+      "human_author": "Amarnath Ojha <amarnathojha071@gmail.com>"
+    }
+  }
+}
