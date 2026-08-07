@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { signOut } from "@/app/actions/auth";
+import { Logo } from "@/components/logo";
 
 export function AppShell({
   user,
@@ -22,12 +23,7 @@ export function AppShell({
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-6">
           <div className="flex items-center gap-8">
             <Link href="/dashboard" className="flex items-center gap-2">
-              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600 text-sm font-bold text-white">
-                T
-              </span>
-              <span className="text-base font-semibold text-zinc-100">
-                TPMForge
-              </span>
+              <Logo size={32} withWordmark />
             </Link>
             <nav className="hidden items-center gap-1 md:flex">
               {navLinks.map((link) => (

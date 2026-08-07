@@ -18,6 +18,7 @@ import {
   Mail,
 } from "lucide-react";
 import { Reveal } from "@/components/reveal";
+import { Logo } from "@/components/logo";
 import { cn, formatINR } from "@/lib/utils";
 
 const features = [
@@ -26,7 +27,7 @@ const features = [
     title: "Readiness Score & Radar",
     description:
       "Upload your resume and instantly get a TPM readiness score across six dimensions — knowledge, application, communication, decision-making, execution, and leadership.",
-    phase: "Now building",
+    phase: "Live",
     featured: true,
   },
   {
@@ -34,14 +35,14 @@ const features = [
     title: "Personalized Roadmap",
     description:
       "A week-by-week plan generated from a real TPM competency graph — never generic course lists.",
-    phase: "Now building",
+    phase: "Live",
   },
   {
     icon: Bot,
     title: "AI Coach",
     description:
       "A 24/7 mentor grounded in the competency graph. Explain concepts, practice scenarios, review answers.",
-    phase: "Now building",
+    phase: "Live",
   },
   {
     icon: ClipboardCheck,
@@ -147,12 +148,7 @@ export default function Home() {
       <header className="sticky top-0 z-50 border-b border-white/5 bg-zinc-950/70 backdrop-blur-xl">
         <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
           <Link href="/" className="flex items-center gap-2.5">
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600 text-sm font-bold text-white shadow-lg shadow-indigo-600/30">
-              T
-            </span>
-            <span className="text-[15px] font-semibold tracking-tight text-zinc-100">
-              TPMForge
-            </span>
+            <Logo size={32} withWordmark />
           </Link>
 
           <div className="hidden items-center gap-1 md:flex">
@@ -368,14 +364,18 @@ export default function Home() {
                       <span
                         className={cn(
                           "shrink-0 rounded-full border px-3 py-1 text-[11px] font-medium",
-                          f.phase === "Now building"
+                          f.phase === "Live"
                             ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-400"
-                            : "border-white/10 bg-white/5 text-zinc-500"
+                            : f.phase === "Now building"
+                              ? "border-amber-500/30 bg-amber-500/10 text-amber-400"
+                              : "border-white/10 bg-white/5 text-zinc-500"
                         )}
                       >
-                        {f.phase === "Now building"
-                          ? "Now building"
-                          : `Coming · ${f.phase}`}
+                        {f.phase === "Live"
+                          ? "Live"
+                          : f.phase === "Now building"
+                            ? "Now building"
+                            : `Coming · ${f.phase}`}
                       </span>
                     </div>
                     <h3 className="text-lg font-semibold text-zinc-100">
@@ -497,12 +497,7 @@ export default function Home() {
         <div className="mx-auto grid max-w-7xl gap-12 px-6 py-16 sm:grid-cols-2 lg:grid-cols-4">
           <div className="sm:col-span-2 lg:col-span-1">
             <Link href="/" className="flex items-center gap-2.5">
-              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600 text-sm font-bold text-white">
-                T
-              </span>
-              <span className="text-[15px] font-semibold tracking-tight text-zinc-100">
-                TPMForge
-              </span>
+              <Logo size={32} withWordmark />
             </Link>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-zinc-500">
               The AI-powered career operating system for Technical Program

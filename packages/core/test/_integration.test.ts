@@ -10,9 +10,7 @@ import {
   getPublishedCompetencies,
   mapResumeToScores,
   seedGraph,
-} from "@tpmforge/core";
-
-describe("resume → readiness integration (live OpenRouter free model)", () => {
+} from "@tpmforge/core";describe("resume → readiness integration (live OpenRouter free model)", () => {
   const live = process.env.OPENROUTER_API_KEY ? it : it.skip;
 
   live(
@@ -67,6 +65,52 @@ describe("resume → readiness integration (live OpenRouter free model)", () => 
           .join(" | ")
       );
       console.log("NEXT STEPS:", nextSteps.join(", "));
+    },
+    180_000
+  );
+});
+
+describe("coach chat (live OpenRouter free model)", () => {
+  const live = process.env.OPENROUTER_API_KEY ? it : it.skip;
+
+  live(
+    "grounds a coach reply on the competency graph",
+    async () => {
+      const client = new OpenRouterClient({ env: getEnv() });
+      const competencies = getPublishedCompetencies(seedGraph);
+
+      const catalog = competencies
+        .map(
+          (c) =>
+            `- ${c.id}: ${c.title} (level ${c.level}, ${c.difficulty}, ~${c.estimatedStudyHours}h) — ${c.description}`
+        )
+        .join("\n");
+
+      const messages = [
+        {
+          role: "system" as const,
+          content: [
+            "You are the TPMForge AI Coach, a senior TPM mentor.",
+            "Ground every answer in the competency catalog. Cite competency IDs in parentheses.",
+            "Be concise and practical.",
+            `Catalog:\n${catalog}`,
+          ].join("\n\n"),
+        },
+        { role: "user" as const, content: "Explain REST API design basics." },
+      ];
+
+      const result = await client.complete({
+        modelId: client.modelIdFor("coach_chat"),
+        fallback: client.fallbacksFor("coach_chat"),
+        messages,
+        maxTokens: 600,
+        temperature: 0.4,
+      });
+
+      expect(result.content.length).toBeGreaterThan(20);
+      console.log("COACH MODEL:", result.model);
+      console.log("COACH TOKENS:", result.tokensUsed);
+      console.log("COACH REPLY (first 200):", result.content.slice(0, 200));
     },
     180_000
   );
