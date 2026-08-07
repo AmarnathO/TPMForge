@@ -1,0 +1,56 @@
+packages/core/test/_integration.test.ts
+  s_9b7382b5b7b0d1::t_8901b2655dde81 13
+  s_9b7382b5b7b0d1::t_ddc934aff6c582 72-117
+src/components/app-shell.tsx
+  s_9b7382b5b7b0d1::t_e50526e280a1a8 26
+  s_9b7382b5b7b0d1::t_1b2f0e71c908d3 3
+packages/core/test/roadmap.test.ts
+  s_9b7382b5b7b0d1::t_10218a15021fc4 1-30,37-58
+  s_9b7382b5b7b0d1::t_1159c8da8b650b 31-36
+src/app/dashboard/radar/page.tsx
+  s_9b7382b5b7b0d1::t_56748d51a0edc2 1-163
+src/lib/analysis.ts
+  s_9b7382b5b7b0d1::t_1c8f23e2bd85a4 1-53
+src/app/page.tsx
+  s_9b7382b5b7b0d1::t_e9a503f986fcc3 21
+  s_9b7382b5b7b0d1::t_0c5741daed65ff 151
+  s_9b7382b5b7b0d1::t_312c7e8cfb5d97 500
+  s_9b7382b5b7b0d1::t_4909449f35fccd 30,38,45
+  s_9b7382b5b7b0d1::t_6af07a43a8d283 367,369-371,374-378
+src/app/dashboard/roadmap/page.tsx
+  s_9b7382b5b7b0d1::t_9be05d189631ed 1-232
+src/app/actions/coach.ts
+  s_9b7382b5b7b0d1::t_1ec0cb9925cb16 25
+  s_9b7382b5b7b0d1::t_fe46db2af8cd4e 1-24,26-123,127-140,144-153,155-191
+  s_9b7382b5b7b0d1::t_a7e56dbbdbabf0 141-143,154
+  s_9b7382b5b7b0d1::t_763f4b6882390c 124-126
+src/components/coach-chat.tsx
+  s_9b7382b5b7b0d1::t_42e2028acd7dee 70-79
+  s_9b7382b5b7b0d1::t_b16a3052300225 1-69,80-195
+src/app/dashboard/readiness/page.tsx
+  s_9b7382b5b7b0d1::t_6e5fb50e501c3d 1-87
+src/components/logo.tsx
+  s_9b7382b5b7b0d1::t_4b0677008a40da 1-83
+src/app/dashboard/coach/page.tsx
+  s_9b7382b5b7b0d1::t_fe9fe3adacab36 1-46
+packages/core/src/index.ts
+  s_9b7382b5b7b0d1::t_044e2524d33b5d 4
+packages/core/src/roadmap.ts
+  s_9b7382b5b7b0d1::t_7d280709a5c20d 1-76
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "ad7664cfc909faff422152411c72aa8efc87e511",
+  "prompts": {},
+  "sessions": {
+    "s_9b7382b5b7b0d1": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_0281697f1ffennuLtHOO7dvmcF",
+        "model": "deepseek-v4-flash-free"
+      },
+      "human_author": "Amarnath Ojha <amarnathojha071@gmail.com>"
+    }
+  }
+}
