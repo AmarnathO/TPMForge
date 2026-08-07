@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { Reveal } from "@/components/reveal";
 import { Logo } from "@/components/logo";
+import { NewsletterForm } from "@/components/newsletter-form";
 import { cn, formatINR } from "@/lib/utils";
 
 const features = [
@@ -163,6 +164,7 @@ export default function Home() {
               ["How it works", "#how-it-works"],
               ["Features", "#features"],
               ["Pricing", "#pricing"],
+              ["Blog", "/blog"],
             ].map(([label, href]) => (
               <a
                 key={href}
@@ -500,6 +502,27 @@ export default function Home() {
       </section>
 
       {/* FOOTER */}
+      <section className="mx-auto max-w-7xl px-6 pb-20">
+        <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-indigo-950/60 to-zinc-900/80 p-10 sm:p-14">
+          <div className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-indigo-600/20 blur-3xl" />
+          <div className="relative max-w-2xl">
+            <p className="text-sm font-semibold text-indigo-300">
+              The TPMForge newsletter
+            </p>
+            <h2 className="mt-2 text-2xl font-bold tracking-tight text-zinc-50 sm:text-3xl">
+              Practical TPM advice, twice a month
+            </h2>
+            <p className="mt-3 text-sm leading-relaxed text-zinc-400">
+              Resume mapping tactics, readiness frameworks, and real roadmap
+              strategies — from the engineer-to-TPM journey. No spam.
+            </p>
+            <div className="mt-6 max-w-md">
+              <NewsletterForm />
+            </div>
+          </div>
+        </div>
+      </section>
+
       <footer className="border-t border-white/5 bg-zinc-950">
         <div className="mx-auto grid max-w-7xl gap-12 px-6 py-16 sm:grid-cols-2 lg:grid-cols-4">
           <div className="sm:col-span-2 lg:col-span-1">
@@ -548,9 +571,14 @@ export default function Home() {
           <div>
             <p className="text-sm font-semibold text-zinc-200">Company</p>
             <ul className="mt-4 space-y-3 text-sm text-zinc-500">
-              {["About", "Blog", "Careers", "Contact"].map((label) => (
+              {[
+                ["About", "#"],
+                ["Blog", "/blog"],
+                ["Careers", "#"],
+                ["Contact", "mailto:hello@tpmforge.app"],
+              ].map(([label, href]) => (
                 <li key={label}>
-                  <a href="#" className="transition hover:text-zinc-100">
+                  <a href={href} className="transition hover:text-zinc-100">
                     {label}
                   </a>
                 </li>

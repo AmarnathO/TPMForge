@@ -16,7 +16,9 @@ import {
 import { createClient } from "@/lib/supabase/server";
 import { AppShell } from "@/components/app-shell";
 import { ResumeUpload } from "@/components/resume-upload";
+import { RoadmapPaywall } from "@/components/roadmap-paywall";
 import { getLatestAnalysis } from "@/lib/analysis";
+import { getSubscription, isSubscriptionActive } from "@/lib/subscription";
 
 export const metadata: Metadata = {
   title: "Roadmap",
@@ -39,10 +41,39 @@ export default async function RoadmapPage() {
     redirect("/login");
   }
 
-  const [profileResult, latest] = await Promise.all([
+  const [profileResult, latest, subscription] = await Promise.all([
     supabase.from("profiles").select("*").eq("id", user.id).single(),
     getLatestAnalysis(supabase, user.id),
+    getSubscription(supabase, user.id),
   ]);
+
+  const subscribed = isSubscriptionActive(subscription);
+
+  if (!subscribed) {
+    return (
+      <AppShell user={{ email: user.email ?? "" }}>
+        <div className="mx-auto max-w-7xl px-6 py-10">
+          {!latest ? (
+            <div className="rounded-2xl border border-dashed border-zinc-700 bg-zinc-900/40 p-10 text-center">
+              <UploadCloud className="mx-auto h-8 w-8 text-zinc-600" />
+              <h3 className="mt-4 text-base font-semibold text-zinc-100">
+                No roadmap yet
+              </h3>
+              <p className="mx-auto mt-2 max-w-md text-sm text-zinc-500">
+                Your roadmap is built from your readiness gaps. Upload a resume
+                to get started — then unlock the plan with a membership.
+              </p>
+              <div className="mx-auto mt-6 max-w-lg">
+                <ResumeUpload />
+              </div>
+            </div>
+          ) : (
+            <RoadmapPaywall email={user.email ?? ""} />
+          )}
+        </div>
+      </AppShell>
+    );
+  }
 
   const profile = profileResult.data;
   const weeklyHours = profile?.weekly_hours ?? 5;
@@ -74,6 +105,15 @@ export default async function RoadmapPage() {
             Gaps from your readiness report, expanded to their prerequisites and
             sequenced week by week.
           </p>
+          {subscription && (
+            <p className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-400">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+              {subscription.plan} membership active
+              {subscription.ends_at
+                ? ` · until ${new Date(subscription.ends_at).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}`
+                : ""}
+            </p>
+          )}
         </div>
 
         {!latest ? (
