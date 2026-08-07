@@ -5,9 +5,12 @@ import { extractResume } from "@/lib/resume-parser";
 import {
   OpenRouterClient,
   calculateReadiness,
+  generateQuiz,
+  generateScenario,
   getEnv,
   getLearningOrder,
   getPublishedCompetencies,
+  gradeScenarioAnswer,
   mapResumeToScores,
   seedGraph,
 } from "@tpmforge/core";describe("resume → readiness integration (live OpenRouter free model)", () => {
@@ -113,5 +116,45 @@ describe("coach chat (live OpenRouter free model)", () => {
       console.log("COACH REPLY (first 200):", result.content.slice(0, 200));
     },
     180_000
+  );
+});
+
+describe("assessment practice (live OpenRouter free model)", () => {
+  const live = process.env.OPENROUTER_API_KEY ? it : it.skip;
+
+  live(
+    "generates a scenario, grades an answer, and generates a quiz",
+    async () => {
+      const client = new OpenRouterClient({ env: getEnv() });
+      const competency = getPublishedCompetencies(seedGraph)[0];
+
+      const scenario = await generateScenario(client, { competency });
+      expect(scenario.scenario.length).toBeGreaterThan(30);
+      expect(scenario.question.length).toBeGreaterThan(10);
+      console.log("SCENARIO MODEL:", scenario.model);
+      console.log("SCENARIO:", scenario.scenario.slice(0, 160));
+
+      const grading = await gradeScenarioAnswer(client, {
+        competency,
+        scenario: scenario.scenario,
+        question: scenario.question,
+        answer:
+          "I would align with the sponsor on priorities, publish a decision log, and set a weekly checkpoint to re-validate scope changes against team capacity.",
+      });
+      expect(grading.score).toBeGreaterThan(0);
+      expect(grading.score).toBeLessThanOrEqual(100);
+      expect(grading.feedback.length).toBeGreaterThan(10);
+      console.log("GRADE MODEL:", grading.model);
+      console.log("GRADE SCORE:", grading.score);
+      console.log("FEEDBACK:", grading.feedback.slice(0, 160));
+
+      const quiz = await generateQuiz(client, { competency, count: 5 });
+      expect(quiz.questions.length).toBeGreaterThan(0);
+      expect(quiz.questions[0].options.length).toBeGreaterThanOrEqual(2);
+      console.log("QUIZ MODEL:", quiz.model);
+      console.log("QUIZ TOKENS:", quiz.tokensUsed);
+      console.log("QUIZ Q1:", quiz.questions[0].question.slice(0, 140));
+    },
+    240_000
   );
 });

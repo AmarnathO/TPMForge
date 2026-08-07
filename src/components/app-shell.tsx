@@ -15,6 +15,7 @@ export function AppShell({
     { href: "/dashboard/radar", label: "Radar" },
     { href: "/dashboard/roadmap", label: "Roadmap" },
     { href: "/dashboard/coach", label: "Coach" },
+    { href: "/dashboard/practice", label: "Practice" },
   ];
 
   return (

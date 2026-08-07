@@ -48,8 +48,8 @@ const features = [
     icon: ClipboardCheck,
     title: "Competency Assessments",
     description:
-      "Measure what you can actually do with rubric-scored, open-ended questions — not video watch-time.",
-    phase: "Now building",
+      "Practice realistic TPM scenarios and applied quizzes, graded by AI against the competency rubric — every attempt becomes evidence.",
+    phase: "Live",
   },
   {
     icon: MessagesSquare,
