@@ -19,7 +19,9 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@tpmforge/core": ["./packages/core/src/index.ts"],
+      "@tpmforge/core/*": ["./packages/core/src/*"]
     }
   },
   "include": [

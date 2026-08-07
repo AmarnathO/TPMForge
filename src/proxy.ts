@@ -42,6 +42,8 @@ export default async function proxy(request: NextRequest) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
+  console.log("[proxy] cookies:", request.cookies.getAll().map((c) => c.name));
+  console.log("[proxy] getUser result:", user?.email ?? "NO USER");
 
   const path = request.nextUrl.pathname;
   const isProtected = PROTECTED_PREFIXES.some((p) => path.startsWith(p));

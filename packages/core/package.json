@@ -1,0 +1,13 @@
+{
+  "name": "@tpmforge/core",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "TPMForge competency graph, scoring kernel, and LLM evaluation client",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "test": "vitest run"
+  },
+  "dependencies": {}
+}
