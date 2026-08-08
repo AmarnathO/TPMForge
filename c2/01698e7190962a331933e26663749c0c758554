@@ -1,0 +1,66 @@
+supabase/migrations/0007_readiness_tests.sql
+  s_9b7382b5b7b0d1::t_76b0de2ec12189 1-24
+src/app/globals.css
+  s_9b7382b5b7b0d1::t_58e34d059d85c5 125-138
+src/lib/readiness.ts
+  s_9b7382b5b7b0d1::t_92b1431ba5bb53 1-60
+src/app/actions/practice.ts
+  s_9b7382b5b7b0d1::t_8a42b501616786 32
+src/components/resume-upload.tsx
+  s_9b7382b5b7b0d1::t_64af6d6dcff7bb 44
+  s_9b7382b5b7b0d1::t_929300fec9c707 13
+  s_9b7382b5b7b0d1::t_d84587d82004a1 75
+  s_9b7382b5b7b0d1::t_0cc0398e061d54 3-10,19-32,38-43,45-69,80-84,95-118,122,124,128,135,143-144,146,153-177
+  s_9b7382b5b7b0d1::t_ec99162e6ef112 178
+src/app/actions/resume.ts
+  s_9b7382b5b7b0d1::t_bbc1c884886bf6 4
+src/app/actions/readiness-test.ts
+  s_9b7382b5b7b0d1::t_cb37a2ea7c7cf0 1-80
+src/lib/limits.ts
+  s_9b7382b5b7b0d1::t_b1114c2525134d 1
+.env.local.example
+  s_9b7382b5b7b0d1::t_0e49113a7fe77d 11-13
+src/app/dashboard/readiness/page.tsx
+  s_9b7382b5b7b0d1::t_f258e781e85b85 4,9-11,13-15,33-38,47,50-52,63-92,94,96-98,102-121
+src/components/readiness-report.tsx
+  s_9b7382b5b7b0d1::t_180140d45a02e9 22,36
+  s_9b7382b5b7b0d1::t_a064a5db295584 77
+src/components/readiness-test.tsx
+  s_9b7382b5b7b0d1::t_befa27f365b881 1-28,31,33-54,56-167
+  s_9b7382b5b7b0d1::t_3bb629e226979a 29-30,32,55
+src/app/dashboard/radar/page.tsx
+  s_9b7382b5b7b0d1::t_c1f99adea6da51 3-4,11-15,50-56,67-82,102-104,108,115-116,118-124,150-178,180-185,188-223
+src/lib/readiness-test.ts
+  s_9b7382b5b7b0d1::t_f1897d32654a72 1-518
+src/components/stand-view.tsx
+  s_9b7382b5b7b0d1::t_316e5c86bc5c24 1-115
+src/components/newsletter-form.tsx
+  s_9b7382b5b7b0d1::t_f375de18b50d16 5,8-9,13
+src/lib/resume-parser.ts
+  s_9b7382b5b7b0d1::t_0ba9b96d68e00c 2
+src/app/dashboard/roadmap/page.tsx
+  s_9b7382b5b7b0d1::t_27e554b88a2e18 127-128
+  s_9b7382b5b7b0d1::t_14630c529ddefa 63-65
+src/app/actions/billing.ts
+  s_9b7382b5b7b0d1::t_eeea347b2a627b 8
+src/app/dashboard/page.tsx
+  s_9b7382b5b7b0d1::t_ce9924a7f60c55 104,116,120,122
+  s_9b7382b5b7b0d1::t_eb8273fa34aca0 2,4,9,12-16,71,73-74,78-82,99-103,105-115,117-119,121,123-128,130-152,154-171,173,177-205
+  s_9b7382b5b7b0d1::t_82a7cdb3b7b1c9 129
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "c201698e7190962a331933e26663749c0c758554",
+  "prompts": {},
+  "sessions": {
+    "s_9b7382b5b7b0d1": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_0281697f1ffennuLtHOO7dvmcF",
+        "model": "deepseek-v4-flash-free"
+      },
+      "human_author": "Amarnath Ojha <amarnathojha071@gmail.com>"
+    }
+  }
+}
