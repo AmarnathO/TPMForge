@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 
 export type Plan = "monthly" | "annual";
 
-export const PLANS: Record<
+const PLANS: Record<
   Plan,
   { label: string; priceRupees: number; amountPaise: number; periodLabel: string; note: string }
 > = {

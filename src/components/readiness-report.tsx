@@ -19,7 +19,7 @@ export function ReadinessReportView({
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <div className="rounded-2xl border border-zinc-800 bg-zinc-900/40 p-6">
           <p className="text-xs font-medium uppercase tracking-wider text-zinc-500">
-            TPM readiness
+            Resume match score
           </p>
           <p className="mt-2 text-5xl font-bold text-zinc-50">
             {report.readinessScore}
@@ -33,7 +33,7 @@ export function ReadinessReportView({
 
         <div className="rounded-2xl border border-zinc-800 bg-zinc-900/40 p-6 lg:col-span-2">
           <p className="text-xs font-medium uppercase tracking-wider text-zinc-500">
-            Dimension radar
+            Competency radar
           </p>
           <div className="mx-auto mt-2 h-64 max-w-xs">
             <RadarChart data={report.radar} />
@@ -74,7 +74,7 @@ export function ReadinessReportView({
 
         <div className="rounded-2xl border border-zinc-800 bg-zinc-900/40 p-6">
           <h3 className="text-sm font-semibold text-zinc-100">
-            Where to start
+            Suggestions
           </h3>
           {report.nextSteps.length === 0 ? (
             <p className="mt-3 text-sm text-zinc-500">

@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { extractResume, MAX_RESUME_BYTES } from "@/lib/resume-parser";
+import { extractResume } from "@/lib/resume-parser";
 import {
   OpenRouterClient,
   calculateReadiness,
@@ -161,5 +161,3 @@ export async function analyzeResume(
 
   return { status: "success", message: "Analysis complete.", report: payload };
 }
-
-export { MAX_RESUME_BYTES };

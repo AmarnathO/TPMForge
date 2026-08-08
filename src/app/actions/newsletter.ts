@@ -7,8 +7,6 @@ export type NewsletterState = {
   message?: string;
 };
 
-export const newsletterInitialState: NewsletterState = { status: "idle" };
-
 export async function subscribeToNewsletter(
   _prev: NewsletterState,
   formData: FormData

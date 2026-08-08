@@ -29,7 +29,7 @@ export type PracticeState = {
   model?: string;
 };
 
-export const initialState: PracticeState = {
+const initialState: PracticeState = {
   status: "idle",
   mode: "scenario",
   competencyId: "",

@@ -60,8 +60,9 @@ export default async function RoadmapPage() {
                 No roadmap yet
               </h3>
               <p className="mx-auto mt-2 max-w-md text-sm text-zinc-500">
-                Your roadmap is built from your readiness gaps. Upload a resume
-                to get started — then unlock the plan with a membership.
+                Your roadmap is built from your resume&apos;s competency gaps.
+                Take the readiness test and upload a resume to get started —
+                then unlock the plan with a membership.
               </p>
               <div className="mx-auto mt-6 max-w-lg">
                 <ResumeUpload />
@@ -123,8 +124,8 @@ export default async function RoadmapPage() {
               No roadmap yet
             </h3>
             <p className="mx-auto mt-2 max-w-md text-sm text-zinc-500">
-              Your roadmap is built from your readiness gaps. Upload a resume to
-              get started.
+              Your roadmap is built from your resume&apos;s competency gaps. Take
+              the readiness test and upload a resume to get started.
             </p>
             <div className="mx-auto mt-6 max-w-lg">
               <ResumeUpload />

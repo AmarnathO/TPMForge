@@ -122,6 +122,20 @@ body {
   animation: grid-pan 8s linear infinite;
 }
 
+/* ---------- Analysis progress bar ---------- */
+@keyframes progress-slide {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(400%);
+  }
+}
+
+.animate-progress {
+  animation: progress-slide 2.2s ease-in-out infinite;
+}
+
 /* ---------- Shimmer sweep for buttons ---------- */
 @keyframes shimmer {
   from {

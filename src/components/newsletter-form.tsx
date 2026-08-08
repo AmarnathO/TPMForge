@@ -2,13 +2,15 @@
 
 import { useActionState } from "react";
 import { CheckCircle2, Loader2, Mail } from "lucide-react";
-import { newsletterInitialState, subscribeToNewsletter } from "@/app/actions/newsletter";
+import { subscribeToNewsletter } from "@/app/actions/newsletter";
 import { cn } from "@/lib/utils";
+
+const initialState = { status: "idle" as const };
 
 export function NewsletterForm() {
   const [state, formAction, pending] = useActionState(
     subscribeToNewsletter,
-    newsletterInitialState
+    initialState
   );
 
   if (state.status === "success") {

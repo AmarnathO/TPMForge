@@ -1,8 +1,7 @@
 import { extractText } from "unpdf";
+import { MAX_RESUME_BYTES } from "@/lib/limits";
 
 export type ResumeFileType = "pdf" | "docx" | "txt";
-
-export const MAX_RESUME_BYTES = 5 * 1024 * 1024;
 
 export interface ExtractedResume {
   text: string;

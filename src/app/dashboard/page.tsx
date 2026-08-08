@@ -1,11 +1,19 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { redirect } from "next/navigation";
+import { ClipboardList, FileText } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { AppShell } from "@/components/app-shell";
 import { ResumeUpload } from "@/components/resume-upload";
 import { ReadinessReportView } from "@/components/readiness-report";
+import { StandView } from "@/components/stand-view";
 import { getPublishedCompetencies, seedGraph } from "@tpmforge/core";
 import type { ResumeReportPayload } from "@/app/actions/resume";
+import { getLatestAnalysis } from "@/lib/analysis";
+import {
+  getLatestReadinessTest,
+  standFromRow,
+} from "@/lib/readiness";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -60,22 +68,18 @@ export default async function DashboardPage() {
     redirect("/login");
   }
 
-  const [profileResult, analysesResult] = await Promise.all([
+  const [profileResult, latest, testRow] = await Promise.all([
     supabase.from("profiles").select("*").eq("id", user.id).single(),
-    supabase
-      .from("resume_analyses")
-      .select(
-        "readiness_score, radar_data, gap_report, model_used, tokens_used, file_name, competency_scores, created_at"
-      )
-      .eq("user_id", user.id)
-      .eq("status", "completed")
-      .order("created_at", { ascending: false })
-      .limit(1),
+    getLatestAnalysis(supabase, user.id),
+    getLatestReadinessTest(supabase, user.id),
   ]);
 
   const profile = profileResult.data;
-  const latest = analysesResult.data?.[0];
-  const hasAnalysis = Boolean(latest);
+  const stand = testRow ? standFromRow(testRow) : null;
+
+  const strongest =
+    stand &&
+    (Object.entries(stand.aspects).sort((a, b) => b[1] - a[1])[0]?.[0] ?? "");
 
   return (
     <AppShell user={{ email: user.email ?? "" }}>
@@ -92,45 +96,113 @@ export default async function DashboardPage() {
           </p>
         </div>
 
-        {hasAnalysis && latest ? (
-          <ReadinessReportView report={analysisToPayload(latest)} />
-        ) : (
-          <>
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-              <DashboardCard
-                label="Readiness score"
-                value="Pending"
-                hint="From your first resume scan"
-              />
-              <DashboardCard
-                label="Gap focus"
-                value="—"
-                hint="Prioritized after radar mapping"
-              />
-              <DashboardCard
-                label="Next milestone"
-                value="Resume scan"
-                hint="Step 1 of your journey"
-              />
-            </div>
-            <div className="mt-10">
-              <ResumeUpload />
-            </div>
-          </>
-        )}
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+          <DashboardCard
+            label="TPM stand"
+            value={stand ? String(stand.overall) : "Pending"}
+            hint={
+              stand
+                ? "From the 30-question readiness test"
+                : "Take the readiness test to see it"
+            }
+          />
+          <DashboardCard
+            label="Strongest pillar"
+            value={
+              strongest
+                ? strongest.charAt(0).toUpperCase() + strongest.slice(1)
+                : "—"
+            }
+            hint={stand ? "Business · technology · product" : "Awaiting test"}
+          />
+          <DashboardCard
+            label="Next step"
+            value={!stand ? "TPM test" : "Resume analysis"}
+            hint={
+              !stand
+                ? "Measure your current stand first"
+                : "Score your resume for suggestions"
+            }
+          />
+        </div>
 
-        {hasAnalysis && (
-          <div className="mt-10">
-            <ResumeUpload />
-            <p className="mt-6 text-center text-xs text-zinc-600">
-              Re-upload a newer resume to refresh your readiness score.
-            </p>
+        {!stand ? (
+          <div className="mt-8">
+            <div className="flex flex-col items-start gap-4 rounded-2xl border border-indigo-500/30 bg-indigo-500/10 p-6 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex items-start gap-3">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-indigo-600/20">
+                  <ClipboardList className="h-6 w-6 text-indigo-300" />
+                </span>
+                <div>
+                  <h3 className="text-base font-semibold text-zinc-100">
+                    Know your current TPM stand
+                  </h3>
+                  <p className="mt-1 text-sm text-zinc-400">
+                    Answer 10 questions on each of business, technology, and
+                    product — get your stand, strongest pillar, and focus
+                    areas in under 10 minutes.
+                  </p>
+                </div>
+              </div>
+              <Link
+                href="/dashboard/readiness#test"
+                className="inline-flex shrink-0 items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-600/25 transition hover:bg-indigo-500"
+              >
+                Take the readiness test
+              </Link>
+            </div>
+          </div>
+        ) : (
+          <div className="mt-8">
+            <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <h3 className="text-sm font-semibold text-zinc-100">
+                  Your current stand
+                </h3>
+                <p className="text-xs text-zinc-500">
+                  Based on your 30-question readiness test.
+                </p>
+              </div>
+              <Link
+                href="/dashboard/readiness#test"
+                className="inline-flex items-center gap-2 rounded-lg border border-zinc-700 px-3 py-2 text-xs font-medium text-zinc-300 transition hover:border-zinc-500 hover:text-zinc-100"
+              >
+                Retake test
+              </Link>
+            </div>
+            <StandView stand={stand} />
           </div>
         )}
 
-        <p className="mt-10 text-xs text-zinc-600">
-          Membership from ₹1,600/mo with annual billing.
-        </p>
+        <div className="mt-12">
+          <div className="mb-4 flex items-center gap-3">
+            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-600/20">
+              <FileText className="h-4 w-4 text-indigo-300" />
+            </span>
+            <div>
+              <h3 className="text-sm font-semibold text-zinc-100">
+                Resume analysis, scoring &amp; suggestions
+              </h3>
+              <p className="text-xs text-zinc-500">
+                Upload your resume for a separate match score, competency gap
+                analysis, and learning suggestions.
+              </p>
+            </div>
+          </div>
+          {latest ? (
+            <>
+              <ReadinessReportView report={analysisToPayload(latest)} />
+              <div className="mt-8">
+                <ResumeUpload />
+                <p className="mt-6 text-center text-xs text-zinc-600">
+                  Re-upload a newer resume to refresh your analysis.
+                </p>
+              </div>
+            </>
+          ) : (
+            <ResumeUpload />
+          )}
+        </div>
       </div>
     </AppShell>
   );
