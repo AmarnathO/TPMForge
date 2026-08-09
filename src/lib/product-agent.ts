@@ -1,3 +1,9 @@
+import {
+  averageScore,
+  type AssessmentCategory,
+  weightedAssessmentScore,
+} from "@tpmforge/core";
+
 export type ProductDimension =
   | "discovery"
   | "strategy"
@@ -55,6 +61,7 @@ export const PRODUCT_DIFFICULTY_LABEL: Record<ProductQuestionDifficulty, string>
 
 interface BaseProductQuestion {
   id: string;
+  category: AssessmentCategory;
   dimension: ProductDimension;
   difficulty: ProductQuestionDifficulty;
   kind: "mcq" | "descriptive";
@@ -78,6 +85,7 @@ export type ProductQuestion = ProductMcqQuestion | ProductDescriptiveQuestion;
 export const PRODUCT_QUESTIONS: ProductQuestion[] = [
   {
     id: "pm-1",
+    category: "scenario",
     dimension: "discovery",
     difficulty: "basic",
     kind: "mcq",
@@ -95,6 +103,7 @@ export const PRODUCT_QUESTIONS: ProductQuestion[] = [
   },
   {
     id: "pm-2",
+    category: "scenario",
     dimension: "communication",
     difficulty: "basic",
     kind: "mcq",
@@ -112,6 +121,7 @@ export const PRODUCT_QUESTIONS: ProductQuestion[] = [
   },
   {
     id: "pm-3",
+    category: "metrics",
     dimension: "metrics",
     difficulty: "intermediate",
     kind: "mcq",
@@ -129,6 +139,7 @@ export const PRODUCT_QUESTIONS: ProductQuestion[] = [
   },
   {
     id: "pm-4",
+    category: "scenario",
     dimension: "prioritization",
     difficulty: "intermediate",
     kind: "mcq",
@@ -146,6 +157,7 @@ export const PRODUCT_QUESTIONS: ProductQuestion[] = [
   },
   {
     id: "pm-5",
+    category: "scenario",
     dimension: "execution",
     difficulty: "intermediate",
     kind: "mcq",
@@ -163,6 +175,7 @@ export const PRODUCT_QUESTIONS: ProductQuestion[] = [
   },
   {
     id: "pm-6",
+    category: "metrics",
     dimension: "metrics",
     difficulty: "advanced",
     kind: "mcq",
@@ -180,6 +193,7 @@ export const PRODUCT_QUESTIONS: ProductQuestion[] = [
   },
   {
     id: "pm-7",
+    category: "product",
     dimension: "discovery",
     difficulty: "intermediate",
     kind: "descriptive",
@@ -190,6 +204,7 @@ export const PRODUCT_QUESTIONS: ProductQuestion[] = [
   },
   {
     id: "pm-8",
+    category: "metrics",
     dimension: "metrics",
     difficulty: "intermediate",
     kind: "descriptive",
@@ -200,6 +215,7 @@ export const PRODUCT_QUESTIONS: ProductQuestion[] = [
   },
   {
     id: "pm-9",
+    category: "product",
     dimension: "strategy",
     difficulty: "advanced",
     kind: "descriptive",
@@ -210,6 +226,7 @@ export const PRODUCT_QUESTIONS: ProductQuestion[] = [
   },
   {
     id: "pm-10",
+    category: "product",
     dimension: "prioritization",
     difficulty: "advanced",
     kind: "descriptive",
@@ -248,6 +265,54 @@ export function scoreProductMcq(answers: ProductAnswers): {
   };
 }
 
+function combineBuckets(mcq: number[], descriptive: number[]): number {
+  if (mcq.length > 0 && descriptive.length > 0) {
+    return Math.round(0.5 * averageScore(mcq) + 0.5 * averageScore(descriptive));
+  }
+  if (mcq.length > 0) return averageScore(mcq);
+  return averageScore(descriptive);
+}
+
+/**
+ * Metrics-first scoring model (70% metrics, 20% product problem, 10%
+ * scenario). MCQ questions score 0/100 by correct answer; descriptive
+ * questions use the LLM's 0-100 score per answer.
+ */
+export function scoreProductByCategory(
+  answers: ProductAnswers,
+  descriptiveScores: Record<string, number> = {}
+): {
+  categoryScores: Record<AssessmentCategory, number>;
+  overallScore: number;
+} {
+  const byCategory: Record<AssessmentCategory, { mcq: number[]; descriptive: number[] }> = {
+    metrics: { mcq: [], descriptive: [] },
+    product: { mcq: [], descriptive: [] },
+    scenario: { mcq: [], descriptive: [] },
+  };
+
+  for (const q of PRODUCT_QUESTIONS) {
+    const bucket = byCategory[q.category];
+    if (q.kind === "mcq") {
+      bucket.mcq.push(answers[q.id] === String(q.correctIndex) ? 100 : 0);
+    } else {
+      const score = descriptiveScores[q.id];
+      if (typeof score === "number") bucket.descriptive.push(score);
+    }
+  }
+
+  const categoryScores: Record<AssessmentCategory, number> = {
+    metrics: combineBuckets(byCategory.metrics.mcq, byCategory.metrics.descriptive),
+    product: combineBuckets(byCategory.product.mcq, byCategory.product.descriptive),
+    scenario: combineBuckets(byCategory.scenario.mcq, byCategory.scenario.descriptive),
+  };
+
+  return {
+    categoryScores,
+    overallScore: weightedAssessmentScore(categoryScores),
+  };
+}
+
 export interface ProductAnswerFeedback {
   score: number;
   feedback: string;
@@ -266,6 +331,7 @@ export interface ProductAgentResult {
   overallScore: number;
   mcqScore: number;
   descriptiveScore: number | null;
+  categoryScores: Record<AssessmentCategory, number>;
   dimensionScores: Partial<Record<ProductDimension, number>>;
   summary: string;
   answerFeedback: Record<string, ProductAnswerFeedback>;
@@ -288,6 +354,7 @@ export const PRODUCT_AGENT_SYSTEM_PROMPT = [
   "",
   "Rules:",
   "- Be honest and specific. Never inflate scores. A two-line generic answer scores low.",
+  "- The overall assessment weights Metrics 70%, Product Problem 20%, Scenario 10%. Be especially rigorous on data & metrics: the right metric, cohort logic, experiment rigor, and quantified impact.",
   "- Feedback: 2-3 sentences per answer. Strengths and gaps: 1-2 short bullets each, defensible from the text.",
   "- Score the six dimension scores in 'dimensions' based on all evidence in the answers; if evidence for a dimension is thin, score it conservatively.",
   "- You will receive EXACTLY 4 descriptive answers with ids pm-7, pm-8, pm-9, pm-10. The 'answers' array MUST contain one entry for EACH of the 4 ids — never fewer, never more.",

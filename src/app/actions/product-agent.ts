@@ -12,6 +12,7 @@ import {
   buildProductAgentPrompt,
   productDescriptiveQuestions,
   scoreProductMcq,
+  scoreProductByCategory,
   type ProductAgentResult,
   type ProductAnswers,
 } from "@/lib/product-agent";
@@ -76,10 +77,13 @@ export async function submitProductAssessment(
   const mcq = scoreProductMcq(answers);
   const descriptive = productDescriptiveQuestions();
 
+  const byCategory = scoreProductByCategory(answers);
+
   let result: ProductAgentResult = {
     overallScore: mcq.score,
     mcqScore: mcq.score,
     descriptiveScore: null,
+    categoryScores: byCategory.categoryScores,
     dimensionScores: {},
     summary: "",
     answerFeedback: {},
@@ -157,13 +161,19 @@ export async function submitProductAssessment(
           )
         : null;
 
+    const descriptiveScores: Record<string, number> = {};
+    for (const q of scored) descriptiveScores[q.id] = answerFeedback[q.id].score;
+
+    const category = scoreProductByCategory(answers, descriptiveScores);
+
     result = {
       overallScore:
         descriptiveScore === null
           ? mcq.score
-          : Math.round(0.5 * descriptiveScore + 0.5 * mcq.score),
+          : category.overallScore,
       mcqScore: mcq.score,
       descriptiveScore,
+      categoryScores: category.categoryScores,
       dimensionScores,
       summary: typeof parsed.summary === "string" ? parsed.summary : "",
       answerFeedback,
@@ -176,7 +186,7 @@ export async function submitProductAssessment(
     console.error("[product-agent] LLM evaluation failed:", err);
   }
 
-  const { error } = await supabase.from("product_assessments").insert({
+  const insertBase = {
     user_id: user.id,
     answers,
     mcq_score: mcq.score,
@@ -189,7 +199,17 @@ export async function submitProductAssessment(
     model: result.model,
     tokens_used: result.tokensUsed,
     graded: result.graded,
-  });
+  };
+
+  let { error } = await supabase
+    .from("product_assessments")
+    .insert({ ...insertBase, category_scores: result.categoryScores });
+
+  if (error && String(error.message).includes("category_scores")) {
+    ({ error } = await supabase
+      .from("product_assessments")
+      .insert(insertBase));
+  }
 
   if (error) {
     console.error("[product-agent] insert failed:", error);

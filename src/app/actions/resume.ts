@@ -152,6 +152,7 @@ export async function analyzeResume(
       profile: coachResult.profile,
       executiveAssessment: coachResult.executiveAssessment,
       readinessScore: coachResult.readinessScore,
+      categoryScores: coachResult.categoryScores,
       strengths: coachResult.strengths,
       criticalGaps: coachResult.criticalGaps,
       resumeIssues: coachResult.resumeIssues,

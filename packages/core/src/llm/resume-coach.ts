@@ -1,6 +1,11 @@
 import { OpenRouterClient } from "./openrouter";
 import { parseJsonContent } from "./evaluate";
-import { clampScore } from "../scoring";
+import {
+  ASSESSMENT_CATEGORIES,
+  clampScore,
+  type AssessmentCategory,
+  weightedAssessmentScore,
+} from "../scoring";
 
 export interface ResumeCoachImprovement {
   current: string;
@@ -16,6 +21,7 @@ export interface ResumeCoachReport {
   profile: string;
   executiveAssessment: string;
   readinessScore: number;
+  categoryScores: Record<AssessmentCategory, number>;
   strengths: string[];
   criticalGaps: string[];
   resumeIssues: string[];
@@ -47,8 +53,10 @@ const COACH_SYSTEM_PROMPT = [
   "A strong TPM resume answers five questions immediately: 1) What scale has this person operated at? 2) What technical problems have they solved? 3) What programs have they led? 4) How did they influence teams and stakeholders? 5) What measurable business/customer/engineering impact did they create?",
   "Audit resume structure, content, business/product/engineering/program impact, technical depth, and ATS relevance. Rewrite weak bullets using Action + Scope + Complexity + Leadership + Technical Context + Business Outcome + Metric. If a metric is unknown use [metric] — never invent one. Keep resumes natural and truthful; do not keyword-stuff.",
   "",
+  "The readiness model is METRICS-FIRST. Score three category buckets 0-100: metrics (choosing/using the right metrics, cohort logic, experiment rigor, quantified business/customer/engineering impact), product (product problem definition, discovery, validation, solving), scenario (real-world stakeholder, trade-off, and judgment calls). 'readiness_score' MUST equal round(0.7*metrics + 0.2*product + 0.1*scenario) — no other formula.",
+  "",
   "Respond with ONLY JSON, no markdown, no code fences, matching exactly this shape:",
-  `{"profile":"<1-2 sentence candidate classification>","executive_assessment":"<2-3 sentences>","readiness_score":62,"strengths":["<max 5>"],"critical_gaps":["<max 5>"],"resume_issues":["<max 5>"],"bullet_improvements":[{"current":"<weak bullet>","recommended":"<Action + Scope + Complexity + Leadership + Technical Context + Business Outcome + Metric>"}],"missing_evidence":["<max 4>"],"technical_gaps":["<max 4>"],"impact_gaps":["<max 4>"],"portfolio_recommendations":["<max 4>"],"certification_recommendations":["<max 3>"],"linkedin_recommendations":["<max 3>"],"content_strategy":["<max 3>"],"roadmap":["<max 6>"],"plan_30_60_90":[{"phase":"30 days","actions":["<max 3>"]},{"phase":"60 days","actions":["<max 3>"]},{"phase":"90 days","actions":["<max 3>"]}],"interview_readiness":{"score":55,"notes":"<1-2 sentences>"}}`,
+  `{"profile":"<1-2 sentence candidate classification>","executive_assessment":"<2-3 sentences>","readiness_score":62,"category_scores":{"metrics":65,"product":55,"scenario":50},"strengths":["<max 5>"],"critical_gaps":["<max 5>"],"resume_issues":["<max 5>"],"bullet_improvements":[{"current":"<weak bullet>","recommended":"<Action + Scope + Complexity + Leadership + Technical Context + Business Outcome + Metric>"}],"missing_evidence":["<max 4>"],"technical_gaps":["<max 4>"],"impact_gaps":["<max 4>"],"portfolio_recommendations":["<max 4>"],"certification_recommendations":["<max 3>"],"linkedin_recommendations":["<max 3>"],"content_strategy":["<max 3>"],"roadmap":["<max 6>"],"plan_30_60_90":[{"phase":"30 days","actions":["<max 3>"]},{"phase":"60 days","actions":["<max 3>"]},{"phase":"90 days","actions":["<max 3>"]}],"interview_readiness":{"score":55,"notes":"<1-2 sentences>"}}`,
   "Keep every bullet concise. Bullet_improvements: 3-5 pairs. Do not invent metrics; use [metric] placeholders.",
 ].join("\n");
 
@@ -122,13 +130,38 @@ export async function runResumeCoach(
 
   const ir = (parsed.interview_readiness ?? {}) as Record<string, unknown>;
 
+  const rawCategory = (parsed.category_scores ?? {}) as Record<string, unknown>;
+  const categoryScores: Record<AssessmentCategory, number> = {
+    metrics: clampScore(
+      typeof rawCategory.metrics === "number" ? (rawCategory.metrics as number) : 0
+    ),
+    product: clampScore(
+      typeof rawCategory.product === "number" ? (rawCategory.product as number) : 0
+    ),
+    scenario: clampScore(
+      typeof rawCategory.scenario === "number" ? (rawCategory.scenario as number) : 0
+    ),
+  };
+
+  const categorySum = ASSESSMENT_CATEGORIES.reduce(
+    (sum, key) => sum + categoryScores[key],
+    0
+  );
+  const readinessScore =
+    categorySum > 0
+      ? weightedAssessmentScore(categoryScores)
+      : clampScore(
+          typeof parsed.readiness_score === "number"
+            ? (parsed.readiness_score as number)
+            : 0
+        );
+
   return {
     profile: typeof parsed.profile === "string" ? parsed.profile : "",
     executiveAssessment:
       typeof parsed.executive_assessment === "string" ? parsed.executive_assessment : "",
-    readinessScore: clampScore(
-      typeof parsed.readiness_score === "number" ? (parsed.readiness_score as number) : 0
-    ),
+    readinessScore,
+    categoryScores,
     strengths: strings(parsed.strengths).slice(0, 5),
     criticalGaps: strings(parsed.critical_gaps).slice(0, 5),
     resumeIssues: strings(parsed.resume_issues).slice(0, 5),

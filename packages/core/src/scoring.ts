@@ -14,9 +14,42 @@ export const DIMENSION_WEIGHTS: Record<Dimension, number> = {
   execution: 1,
 };
 
+/**
+ * Metrics-first assessment model used across the product. The overall score
+ * is weighted 70% metrics, 20% product problem, 10% scenario.
+ */
+export type AssessmentCategory = "metrics" | "product" | "scenario";
+
+export const ASSESSMENT_CATEGORY_WEIGHTS: Record<AssessmentCategory, number> = {
+  metrics: 0.7,
+  product: 0.2,
+  scenario: 0.1,
+};
+
+export const ASSESSMENT_CATEGORIES: AssessmentCategory[] = [
+  "metrics",
+  "product",
+  "scenario",
+];
+
 export function clampScore(n: number): number {
   if (!Number.isFinite(n)) return 0;
   return Math.max(0, Math.min(100, Math.round(n)));
+}
+
+export function averageScore(values: number[]): number {
+  if (values.length === 0) return 0;
+  return Math.round(values.reduce((sum, v) => sum + clampScore(v), 0) / values.length);
+}
+
+export function weightedAssessmentScore(
+  scores: Record<AssessmentCategory, number>
+): number {
+  let sum = 0;
+  for (const category of ASSESSMENT_CATEGORIES) {
+    sum += clampScore(scores[category] ?? 0) * ASSESSMENT_CATEGORY_WEIGHTS[category];
+  }
+  return Math.round(sum);
 }
 
 /**

@@ -7,6 +7,7 @@ export interface ProductAssessmentRow {
   mcq_score: number | null;
   descriptive_score: number | null;
   dimension_scores: Record<string, number> | null;
+  category_scores: Record<string, number> | null;
   summary: string | null;
   answer_feedback: Record<string, unknown> | null;
   roadmap: unknown[] | null;
@@ -16,7 +17,7 @@ export interface ProductAssessmentRow {
 }
 
 export const PRODUCT_ASSESSMENT_SELECT =
-  "id, overall_score, mcq_score, descriptive_score, dimension_scores, summary, answer_feedback, roadmap, model, graded, created_at";
+  "id, overall_score, mcq_score, descriptive_score, dimension_scores, category_scores, summary, answer_feedback, roadmap, model, graded, created_at";
 
 export async function getLatestProductAssessment(
   supabase: SupabaseClient,
@@ -35,13 +36,53 @@ export function productAssessmentFromRow(
   row: ProductAssessmentRow
 ): ProductAgentResult | null {
   if (row.overall_score === null) return null;
-  const dimensions = (
+  const dimensionScores = (
     Object.keys(row.dimension_scores ?? {}) as string[]
   ).reduce<Record<string, number>>((acc, key) => {
     const value = row.dimension_scores?.[key];
     if (typeof value === "number") acc[key] = value;
     return acc;
   }, {});
+
+  const avgOf = (...keys: string[]): number => {
+    const values = keys
+      .map((k) => dimensionScores[k])
+      .filter((v): v is number => typeof v === "number");
+    return values.length > 0
+      ? Math.round(values.reduce((a, b) => a + b, 0) / values.length)
+      : 0;
+  };
+
+  const legacyCategory = (
+    mcq: number,
+    descriptive: number | null
+  ): Record<string, number> => {
+    const metrics =
+      typeof dimensionScores.metrics === "number"
+        ? dimensionScores.metrics
+        : Math.round((mcq + (descriptive ?? mcq)) / 2);
+    const product = avgOf("discovery", "strategy", "prioritization");
+    const scenario = avgOf("execution", "communication");
+    return {
+      metrics: product > 0 ? metrics : mcq,
+      product: product > 0 ? product : (descriptive ?? mcq),
+      scenario: scenario > 0 ? scenario : mcq,
+    };
+  };
+
+  const mcqScore = row.mcq_score ?? 0;
+  const rawCategory = row.category_scores ?? {};
+  const hasCategory =
+    typeof rawCategory.metrics === "number" ||
+    typeof rawCategory.product === "number" ||
+    typeof rawCategory.scenario === "number";
+  const categoryScores = hasCategory
+    ? {
+        metrics: Math.max(0, Math.min(100, Math.round(rawCategory.metrics ?? 0))),
+        product: Math.max(0, Math.min(100, Math.round(rawCategory.product ?? 0))),
+        scenario: Math.max(0, Math.min(100, Math.round(rawCategory.scenario ?? 0))),
+      }
+    : legacyCategory(mcqScore, row.descriptive_score);
   const roadmap = Array.isArray(row.roadmap)
     ? row.roadmap
         .map((item) => item as Record<string, unknown>)
@@ -75,9 +116,10 @@ export function productAssessmentFromRow(
   }
   return {
     overallScore: row.overall_score,
-    mcqScore: row.mcq_score ?? 0,
+    mcqScore: mcqScore,
     descriptiveScore: row.descriptive_score,
-    dimensionScores: dimensions,
+    categoryScores,
+    dimensionScores,
     summary: row.summary ?? "",
     answerFeedback,
     roadmap,

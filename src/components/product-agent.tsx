@@ -86,7 +86,33 @@ export function ProductAgent({
       ? answers[activeQuestion.id] !== undefined
       : (answers[activeQuestion.id] ?? "").trim().length >= 20;
 
-  const renderResult = (r: ProductAgentResult) => {
+const CATEGORY_META: {
+  key: "metrics" | "product" | "scenario";
+  label: string;
+  weight: string;
+  description: string;
+}[] = [
+  {
+    key: "metrics",
+    label: "Metrics & Data",
+    weight: "70%",
+    description: "Right metric, cohort logic, experiment rigor, quantified impact",
+  },
+  {
+    key: "product",
+    label: "Product Problem",
+    weight: "20%",
+    description: "Problem definition, discovery, and solving",
+  },
+  {
+    key: "scenario",
+    label: "Scenario",
+    weight: "10%",
+    description: "Real-world stakeholder and judgment calls",
+  },
+];
+
+const renderResult = (r: ProductAgentResult) => {
     const dimensions = PRODUCT_DIMENSIONS.filter(
       (d) => typeof r.dimensionScores?.[d.key] === "number"
     );
@@ -144,6 +170,46 @@ export function ProductAgent({
             <p className="mt-1 text-xs text-zinc-500">
               Evaluated by the Product Mentor on six PM dimensions.
             </p>
+          </div>
+        </div>
+
+        <div className="rounded-2xl border border-zinc-800 bg-zinc-900/40 p-6">
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+            <h3 className="text-sm font-semibold text-zinc-100">
+              Metrics-first score breakdown
+            </h3>
+            <span className="rounded-full border border-zinc-700 px-2.5 py-0.5 text-[11px] font-medium text-zinc-400">
+              70 / 20 / 10 weighting
+            </span>
+          </div>
+          <div className="space-y-4">
+            {CATEGORY_META.map((c) => {
+              const score = r.categoryScores?.[c.key] ?? 0;
+              return (
+                <div key={c.key}>
+                  <div className="mb-1.5 flex items-center justify-between gap-3">
+                    <div>
+                      <p className="text-sm font-medium text-zinc-200">
+                        {c.label}
+                        <span className="ml-2 rounded-full bg-zinc-800 px-2 py-0.5 text-[11px] text-zinc-400">
+                          {c.weight}
+                        </span>
+                      </p>
+                      <p className="text-xs text-zinc-500">{c.description}</p>
+                    </div>
+                    <span className={`text-sm font-bold ${scoreColor(score)}`}>
+                      {score}/100
+                    </span>
+                  </div>
+                  <div className="h-1.5 w-full overflow-hidden rounded-full bg-zinc-800">
+                    <div
+                      className="h-full rounded-full bg-gradient-to-r from-violet-500 to-indigo-500"
+                      style={{ width: `${score}%` }}
+                    />
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
 

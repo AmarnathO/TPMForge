@@ -49,6 +49,8 @@ export function ReadinessReportView({
 }) {
   const topGaps = report.gaps.slice(0, 6);
   const coach = report.coach;
+  const coachGaps = coach?.criticalGaps ?? [];
+  const coachSteps = coach?.roadmap ?? [];
 
   return (
     <div className="space-y-8">
@@ -82,7 +84,16 @@ export function ReadinessReportView({
           <h3 className="text-sm font-semibold text-zinc-100">
             Priority gaps
           </h3>
-          {topGaps.length === 0 ? (
+          {coachGaps.length > 0 ? (
+            <ul className="mt-4 space-y-3">
+              {coachGaps.map((gap, i) => (
+                <li key={i} className="flex items-start gap-2.5">
+                  <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-rose-500" />
+                  <p className="text-sm leading-relaxed text-zinc-300">{gap}</p>
+                </li>
+              ))}
+            </ul>
+          ) : topGaps.length === 0 ? (
             <p className="mt-3 text-sm text-zinc-500">
               No significant gaps below threshold. Strong profile.
             </p>
@@ -112,7 +123,18 @@ export function ReadinessReportView({
           <h3 className="text-sm font-semibold text-zinc-100">
             Suggestions
           </h3>
-          {report.nextSteps.length === 0 ? (
+          {coachSteps.length > 0 ? (
+            <ol className="mt-4 space-y-3">
+              {coachSteps.map((step, i) => (
+                <li key={i} className="flex items-start gap-3">
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-indigo-600/20 text-xs font-semibold text-indigo-300">
+                    {i + 1}
+                  </span>
+                  <p className="text-sm leading-relaxed text-zinc-300">{step}</p>
+                </li>
+              ))}
+            </ol>
+          ) : report.nextSteps.length === 0 ? (
             <p className="mt-3 text-sm text-zinc-500">
               Your roadmap is clear. No foundational work needed yet.
             </p>
@@ -165,6 +187,9 @@ export function ReadinessReportView({
                 {coach.readinessScore}
                 <span className="text-xl text-zinc-500">/100</span>
               </p>
+              <p className="mt-1 text-[11px] text-zinc-600">
+                Metrics-first · 70 / 20 / 10
+              </p>
             </div>
             <div className="rounded-xl border border-zinc-800 bg-zinc-950/60 p-5 sm:col-span-2">
               <p className="text-xs font-medium uppercase tracking-wider text-zinc-500">
@@ -175,6 +200,48 @@ export function ReadinessReportView({
               </p>
             </div>
           </div>
+
+          {(typeof coach.categoryScores?.metrics === "number" ||
+            typeof coach.categoryScores?.product === "number" ||
+            typeof coach.categoryScores?.scenario === "number") && (
+            <div className="mt-4 rounded-xl border border-zinc-800 bg-zinc-950/60 p-5">
+              <p className="text-xs font-medium uppercase tracking-wider text-zinc-500">
+                Metrics-first breakdown
+              </p>
+              <div className="mt-3 space-y-3">
+                {(
+                  [
+                    ["metrics", "Metrics & Data", "70%"],
+                    ["product", "Product Problem", "20%"],
+                    ["scenario", "Scenario", "10%"],
+                  ] as const
+                ).map(([key, label, weight]) => {
+                  const score = coach.categoryScores?.[key] ?? 0;
+                  return (
+                    <div key={key}>
+                      <div className="mb-1 flex items-center justify-between gap-3">
+                        <p className="text-xs text-zinc-400">
+                          {label}{" "}
+                          <span className="ml-1 rounded-full bg-zinc-800 px-1.5 py-0.5 text-[10px] text-zinc-500">
+                            {weight}
+                          </span>
+                        </p>
+                        <span className="text-xs font-bold text-indigo-300">
+                          {score}/100
+                        </span>
+                      </div>
+                      <div className="h-1.5 w-full overflow-hidden rounded-full bg-zinc-800">
+                        <div
+                          className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-violet-500"
+                          style={{ width: `${score}%` }}
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           <div className="mt-6 grid grid-cols-1 gap-8 lg:grid-cols-2">
             <CoachList title="Top strengths" items={coach.strengths} tone="emerald" />
