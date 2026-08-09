@@ -59,10 +59,12 @@ export function ProductAgent({
     submitProductAssessment,
     initialState
   );
-  const [view, setView] = useState<"intro" | "quiz" | "result">("intro");
+  const [localView, setLocalView] = useState<"intro" | "quiz" | "result">("intro");
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [qIndex, setQIndex] = useState(0);
 
+  const view =
+    state.status === "success" && state.result ? "result" : localView;
   const result = state.status === "success" && state.result ? state.result : null;
   const showing = view === "result" ? (result ?? initial) : null;
 
@@ -76,7 +78,7 @@ export function ProductAgent({
   const startQuiz = () => {
     setAnswers({});
     setQIndex(0);
-    setView("quiz");
+    setLocalView("quiz");
   };
 
   const currentAnswered =
@@ -297,7 +299,7 @@ export function ProductAgent({
         <button
           type="button"
           onClick={() => {
-            setView("intro");
+            setLocalView("intro");
             setAnswers({});
             setQIndex(0);
           }}
@@ -372,7 +374,7 @@ export function ProductAgent({
                     type="button"
                     onClick={() => {
                       if (qIndex === 0) {
-                        setView("intro");
+                        setLocalView("intro");
                         setAnswers({});
                       } else {
                         setQIndex((i) => i - 1);
@@ -540,7 +542,7 @@ export function ProductAgent({
           </div>
           <button
             type="button"
-            onClick={() => setView("result")}
+            onClick={() => setLocalView("result")}
             className="rounded-xl border border-zinc-700 px-4 py-2 text-sm font-medium text-zinc-200 transition hover:border-zinc-500"
           >
             View result
