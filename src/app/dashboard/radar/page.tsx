@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { ClipboardList, UploadCloud } from "lucide-react";
+import { ArrowRight, ClipboardList, UploadCloud } from "lucide-react";
 import type { DimensionScores } from "@tpmforge/core";
 import { createClient } from "@/lib/supabase/server";
 import { AppShell } from "@/components/app-shell";
 import { RadarChart } from "@/components/radar-chart";
-import { ResumeUpload } from "@/components/resume-upload";
 import { getLatestAnalysis } from "@/lib/analysis";
 import {
   aspectsToRadar,
@@ -121,9 +120,12 @@ export default async function RadarPage() {
             >
               <ClipboardList className="h-4 w-4" /> Take the readiness test
             </Link>
-            <div className="mx-auto mt-8 max-w-lg">
-              <ResumeUpload redirectTo="/dashboard/resume" />
-            </div>
+            <Link
+              href="/dashboard/resume"
+              className="mt-6 inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-600/25 transition hover:bg-indigo-500"
+            >
+              Analyze my resume <ArrowRight className="h-4 w-4" />
+            </Link>
           </div>
         ) : (
           <>
@@ -182,7 +184,12 @@ export default async function RadarPage() {
                       Your radar is derived from your readiness test. Upload a
                       resume for a separate competency-based radar.
                       <div className="mt-4">
-                        <ResumeUpload redirectTo="/dashboard/resume" />
+                        <Link
+                          href="/dashboard/resume"
+                          className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-600/25 transition hover:bg-indigo-500"
+                        >
+                          Go to resume analysis <ArrowRight className="h-4 w-4" />
+                        </Link>
                       </div>
                     </div>
                   </>

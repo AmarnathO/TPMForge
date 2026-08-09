@@ -14,6 +14,7 @@ const ROLE_ENV_MAP: Record<ModelRole, string> = {
   coach_chat: "OPENROUTER_MODEL_COACH_CHAT",
   content_generation: "OPENROUTER_MODEL_CONTENT_GENERATION",
   embeddings: "OPENROUTER_MODEL_EMBEDDINGS",
+  product_agent: "OPENROUTER_MODEL_PRODUCT_AGENT",
 };
 
 /**

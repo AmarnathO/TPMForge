@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { ArrowRight, ClipboardList, FileText } from "lucide-react";
+import { ArrowRight, ClipboardList, FileText, Sparkles } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { AppShell } from "@/components/app-shell";
 import { StandView } from "@/components/stand-view";
@@ -112,28 +112,55 @@ export default async function ReadinessPage({
           )}
         </div>
 
-        <div className="mt-12 rounded-2xl border border-zinc-800 bg-zinc-900/40 p-6">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex items-start gap-3">
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-indigo-600/20">
-                <FileText className="h-4 w-4 text-indigo-300" />
-              </span>
-              <div>
-                <h3 className="text-sm font-semibold text-zinc-100">
-                  Resume analysis, scoring &amp; suggestions
-                </h3>
-                <p className="mt-1 text-xs text-zinc-500">
-                  Upload your resume to get a separate match score, competency
-                  gaps, and suggestions to fix it.
-                </p>
+        <div className="mt-12 grid grid-cols-1 gap-4 lg:grid-cols-2">
+          <div className="rounded-2xl border border-zinc-800 bg-zinc-900/40 p-6">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex items-start gap-3">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-indigo-600/20">
+                  <FileText className="h-4 w-4 text-indigo-300" />
+                </span>
+                <div>
+                  <h3 className="text-sm font-semibold text-zinc-100">
+                    Resume Analysis, Scoring &amp; Suggestions
+                  </h3>
+                  <p className="mt-1 text-xs text-zinc-500">
+                    Upload your resume to get a separate match score, competency
+                    gaps, and suggestions to fix it.
+                  </p>
+                </div>
               </div>
+              <Link
+                href="/dashboard/resume"
+                className="inline-flex shrink-0 items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-600/25 transition hover:bg-indigo-500"
+              >
+                Go to resume analysis <ArrowRight className="h-4 w-4" />
+              </Link>
             </div>
-            <Link
-              href="/dashboard/resume"
-              className="inline-flex shrink-0 items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-600/25 transition hover:bg-indigo-500"
-            >
-              Go to resume analysis <ArrowRight className="h-4 w-4" />
-            </Link>
+          </div>
+
+          <div className="rounded-2xl border border-zinc-800 bg-zinc-900/40 p-6">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex items-start gap-3">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-violet-600/20">
+                  <Sparkles className="h-4 w-4 text-violet-300" />
+                </span>
+                <div>
+                  <h3 className="text-sm font-semibold text-zinc-100">
+                    Product Mentor Agent
+                  </h3>
+                  <p className="mt-1 text-xs text-zinc-500">
+                    Deep-dive your product thinking — real scenarios, metrics,
+                    and written answers evaluated by an AI product mentor.
+                  </p>
+                </div>
+              </div>
+              <Link
+                href="/dashboard/product-agent"
+                className="inline-flex shrink-0 items-center gap-2 rounded-xl bg-violet-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-violet-600/25 transition hover:bg-violet-500"
+              >
+                Meet your product mentor <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
           </div>
         </div>
       </div>

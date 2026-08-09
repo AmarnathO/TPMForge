@@ -33,7 +33,7 @@ export default async function ResumeAnalysisPage() {
           <div>
             <p className="text-sm text-indigo-400">Resume analysis</p>
             <h1 className="mt-1 text-2xl font-bold tracking-tight text-zinc-50">
-              Resume analysis, scoring &amp; suggestions
+              Resume Analysis, Scoring &amp; Suggestions
             </h1>
             <p className="mt-2 text-sm text-zinc-400">
               Match score, competency gaps, and learning suggestions to fix

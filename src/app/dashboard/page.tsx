@@ -4,7 +4,6 @@ import { redirect } from "next/navigation";
 import { ArrowRight, ClipboardList, FileText } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { AppShell } from "@/components/app-shell";
-import { ResumeUpload } from "@/components/resume-upload";
 import { RadarChart } from "@/components/radar-chart";
 import { getLatestAnalysis } from "@/lib/analysis";
 import {
@@ -78,7 +77,7 @@ export default async function DashboardPage() {
               </span>
               <div>
                 <h2 className="text-xl font-bold tracking-tight text-zinc-50">
-                  Know your current TPM stand
+                  Know Your Current TPM Stand
                 </h2>
                 <p className="mt-1 text-sm text-zinc-400">
                   {stand
@@ -181,7 +180,7 @@ export default async function DashboardPage() {
           )}
         </section>
 
-        {/* -------- Section 2: Resume analysis (biggest heading + upload) -------- */}
+        {/* -------- Section 2: Resume analysis (biggest heading + journey link) -------- */}
         <section className="mt-16">
           <div className="mb-6 flex items-center gap-3">
             <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-600/20">
@@ -189,11 +188,11 @@ export default async function DashboardPage() {
             </span>
             <div>
               <h2 className="text-3xl font-bold tracking-tight text-zinc-50">
-                Resume analysis, scoring &amp; suggestions
+                Resume Analysis, Scoring &amp; Suggestions
               </h2>
               <p className="mt-1 text-sm text-zinc-400">
-                Upload your resume to score it against the TPM competency
-                graph — then open the full analysis with gaps and suggestions.
+                Upload your resume to score it against the TPM competency graph
+                — then open the full analysis with gaps and suggestions.
               </p>
             </div>
           </div>
@@ -223,7 +222,28 @@ export default async function DashboardPage() {
             </div>
           )}
 
-          <ResumeUpload redirectTo="/dashboard/resume" />
+          <Link
+            href="/dashboard/resume"
+            className="group flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-indigo-500/30 bg-gradient-to-br from-indigo-500/10 via-zinc-900/40 to-zinc-900/40 p-8 transition hover:border-indigo-500/60"
+          >
+            <div className="flex items-center gap-4">
+              <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-600/20">
+                <FileText className="h-6 w-6 text-indigo-300" />
+              </span>
+              <div>
+                <h3 className="text-lg font-semibold text-zinc-50">
+                  {latest ? "Re-analyze your resume" : "Start your resume analysis"}
+                </h3>
+                <p className="mt-1 text-sm text-zinc-400">
+                  Upload your resume on the resume analysis page — get a match
+                  score, competency gaps, and suggestions.
+                </p>
+              </div>
+            </div>
+            <span className="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-600/25 transition group-hover:bg-indigo-500">
+              Go to resume analysis <ArrowRight className="h-4 w-4" />
+            </span>
+          </Link>
         </section>
       </div>
     </AppShell>

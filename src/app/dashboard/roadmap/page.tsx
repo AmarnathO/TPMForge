@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import {
   CalendarDays,
   Clock,
@@ -7,6 +8,7 @@ import {
   UploadCloud,
   CheckCircle2,
   AlertTriangle,
+  ArrowRight,
 } from "lucide-react";
 import {
   buildRoadmap,
@@ -15,7 +17,6 @@ import {
 } from "@tpmforge/core";
 import { createClient } from "@/lib/supabase/server";
 import { AppShell } from "@/components/app-shell";
-import { ResumeUpload } from "@/components/resume-upload";
 import { RoadmapPaywall } from "@/components/roadmap-paywall";
 import { getLatestAnalysis } from "@/lib/analysis";
 import { getSubscription, isSubscriptionActive } from "@/lib/subscription";
@@ -65,7 +66,12 @@ export default async function RoadmapPage() {
                 then unlock the plan with a membership.
               </p>
               <div className="mx-auto mt-6 max-w-lg">
-                <ResumeUpload redirectTo="/dashboard/resume" />
+                <Link
+                  href="/dashboard/resume"
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-600/25 transition hover:bg-indigo-500"
+                >
+                  Analyze my resume <ArrowRight className="h-4 w-4" />
+                </Link>
               </div>
             </div>
           ) : (
@@ -128,7 +134,12 @@ export default async function RoadmapPage() {
               the readiness test and upload a resume to get started.
             </p>
             <div className="mx-auto mt-6 max-w-lg">
-              <ResumeUpload redirectTo="/dashboard/resume" />
+              <Link
+                href="/dashboard/resume"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-600/25 transition hover:bg-indigo-500"
+              >
+                Analyze my resume <ArrowRight className="h-4 w-4" />
+              </Link>
             </div>
           </div>
         ) : (

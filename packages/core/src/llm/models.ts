@@ -3,7 +3,8 @@ export type ModelRole =
   | "coach_chat"
   | "grading"
   | "content_generation"
-  | "embeddings";
+  | "embeddings"
+  | "product_agent";
 
 export interface ModelConfig {
   id: string;
@@ -58,6 +59,14 @@ export const MODELS: Record<ModelRole, ModelConfig> = {
     maxTokens: 1000,
     jsonMode: false,
     temperature: 0,
+  },
+  product_agent: {
+    id: "openai/gpt-oss-20b:free",
+    fallback: ["google/gemma-4-31b-it:free", "openrouter/free"],
+    purpose: "Product mentor: evaluate descriptive PM answers → dimensions + roadmap",
+    maxTokens: 2000,
+    jsonMode: true,
+    temperature: 0.2,
   },
 };
 

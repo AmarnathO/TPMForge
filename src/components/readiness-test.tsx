@@ -19,6 +19,7 @@ import {
   DIFFICULTY_LABEL,
   DIFFICULTY_MIX,
   questionsForAspect,
+  scoreAspect,
   type QuestionDifficulty,
   type ReadinessAspect,
 } from "@/lib/readiness-test";
@@ -46,6 +47,10 @@ export function ReadinessTest() {
   const [activeAspect, setActiveAspect] = useState<ReadinessAspect | null>(null);
   const [qIndex, setQIndex] = useState(0);
   const [retake, setRetake] = useState(false);
+  const [aspectResult, setAspectResult] = useState<{
+    aspect: ReadinessAspect;
+    score: number;
+  } | null>(null);
 
   const total = READINESS_QUESTIONS.length;
   const answered = Object.keys(answers).length;
@@ -59,6 +64,7 @@ export function ReadinessTest() {
     setAnswers({});
     setActiveAspect(null);
     setQIndex(0);
+    setAspectResult(null);
   };
 
   if (result) {
@@ -128,12 +134,15 @@ export function ReadinessTest() {
         </div>
       </div>
 
-      {activeAspect === null ? (
+      {activeAspect === null && aspectResult === null ? (
         <>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
             {ASPECTS.map((aspect) => {
               const count = answeredInAspect(aspect.key);
               const done = count === questionsForAspect(aspect.key).length;
+              const sectionScore = done
+                ? scoreAspect(aspect.key, answers)
+                : null;
               return (
                 <button
                   key={aspect.key}
@@ -158,7 +167,9 @@ export function ReadinessTest() {
                       )}
                     </span>
                     <span className="text-sm font-semibold text-indigo-300">
-                      {count}/{questionsForAspect(aspect.key).length}
+                      {done && sectionScore !== null
+                        ? `${sectionScore}/100`
+                        : `${count}/${questionsForAspect(aspect.key).length}`}
                     </span>
                   </div>
                   <div>
@@ -210,6 +221,45 @@ export function ReadinessTest() {
             )}
           </button>
         </>
+      ) : aspectResult !== null ? (
+        <div className="rounded-2xl border border-zinc-800 bg-zinc-900/40 p-6">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <p className="text-sm font-semibold text-zinc-100">
+                {ASPECTS.find((a) => a.key === aspectResult.aspect)?.label} pillar
+                score
+              </p>
+              <p className="mt-1 text-xs text-zinc-500">
+                From the 12 questions in this section.
+              </p>
+            </div>
+            <p className="text-3xl font-bold text-indigo-300">
+              {aspectResult.score}/100
+            </p>
+          </div>
+          <div className="mt-4 h-1.5 w-full overflow-hidden rounded-full bg-zinc-800">
+            <div
+              className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 transition-all duration-500"
+              style={{ width: `${aspectResult.score}%` }}
+            />
+          </div>
+          <p className="mt-4 text-sm text-zinc-400">
+            {aspectResult.score >= 80
+              ? "Strong grasp of this pillar — you can reason fluently in this area."
+              : aspectResult.score >= 65
+                ? "A solid foundation here — sharpen the edge cases and you'll be fluent."
+                : aspectResult.score >= 50
+                  ? "You know the fundamentals — practice will make this instinctive."
+                  : "This pillar is early-stage — the roadmap below will move it fast."}
+          </p>
+          <button
+            type="button"
+            onClick={() => setAspectResult(null)}
+            className="mt-5 inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-600/25 transition hover:bg-indigo-500"
+          >
+            Continue to sections <ArrowRight className="h-4 w-4" />
+          </button>
+        </div>
       ) : (
         <div className="rounded-2xl border border-zinc-800 bg-zinc-900/40 p-6">
           <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
@@ -285,7 +335,10 @@ export function ReadinessTest() {
               disabled={answers[activeQuestion.id] === undefined}
               onClick={() => {
                 if (qIndex === activeQuestions.length - 1) {
+                  const aspect = activeAspect!;
+                  const score = scoreAspect(aspect, answers);
                   setActiveAspect(null);
+                  setAspectResult({ aspect, score: score ?? 0 });
                 } else {
                   setQIndex((i) => i + 1);
                 }

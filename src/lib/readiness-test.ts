@@ -577,6 +577,27 @@ export function overallFromAspects(aspects: AspectScores): number {
   );
 }
 
+export function scoreAspect(
+  aspect: ReadinessAspect,
+  answers: ReadinessAnswers
+): number | null {
+  const questions = questionsForAspect(aspect);
+  if (questions.some((q) => typeof answers[q.id] !== "number")) {
+    return null;
+  }
+  let total = 0;
+  let max = 0;
+  for (const q of questions) {
+    max += 3;
+    const picked = answers[q.id];
+    const option = q.options[picked];
+    if (typeof picked === "number" && option) {
+      total += option.points;
+    }
+  }
+  return max > 0 ? Math.round((total / max) * 100) : null;
+}
+
 export interface TpmStand {
   overall: number;
   aspects: AspectScores;
