@@ -1,0 +1,21 @@
+src/lib/product-assessments.ts
+  s_9b7382b5b7b0d1::t_0285e7405c0b40 31,38-39,46
+  s_9b7382b5b7b0d1::t_585c237967b245 40,45
+  s_9b7382b5b7b0d1::t_7de87cb1297178 24-26,37,41-44,47-48
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "548195e441aea1955f5a8b36641b727f3e58306f",
+  "prompts": {},
+  "sessions": {
+    "s_9b7382b5b7b0d1": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_0281697f1ffennuLtHOO7dvmcF",
+        "model": "deepseek-v4-flash-free"
+      },
+      "human_author": "Amarnath Ojha <amarnathojha071@gmail.com>"
+    }
+  }
+}
