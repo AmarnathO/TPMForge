@@ -1,0 +1,62 @@
+packages/core/src/llm/models.ts
+  s_9b7382b5b7b0d1::t_7d0615a5043494 6-7
+  s_9b7382b5b7b0d1::t_af4b3228d0d4c4 63-70
+src/lib/readiness-test.ts
+  s_9b7382b5b7b0d1::t_5a3f3d7f97d2cb 580-600
+packages/core/src/llm/env.ts
+  s_9b7382b5b7b0d1::t_c1eaa4d109fed1 17
+src/components/product-agent.tsx
+  s_9b7382b5b7b0d1::t_7bfb6f52ebeae0 1-592
+src/app/actions/product-agent.ts
+  s_9b7382b5b7b0d1::t_0aa94176646de4 1-216
+src/lib/product-agent.ts
+  s_9b7382b5b7b0d1::t_eaa2258f2e6eb3 269
+  s_9b7382b5b7b0d1::t_6777f8d0a6335e 1-268,270-318
+src/app/dashboard/roadmap/page.tsx
+  s_9b7382b5b7b0d1::t_2a7a0db9707a18 137-142
+  s_9b7382b5b7b0d1::t_49847ca6016450 69-74
+  s_9b7382b5b7b0d1::t_24573fef38f763 3,11
+src/app/dashboard/readiness/page.tsx
+  s_9b7382b5b7b0d1::t_b0a3bd71fc4c71 4
+  s_9b7382b5b7b0d1::t_9c38a7958c7796 115-130,132-162
+src/lib/product-assessments.ts
+  s_9b7382b5b7b0d1::t_14a369605acf24 1-88
+src/app/dashboard/page.tsx
+  s_9b7382b5b7b0d1::t_11558491013916 80
+  s_9b7382b5b7b0d1::t_b1f874d74abfc1 183,191,194-195,225-246
+src/app/dashboard/product-agent/page.tsx
+  s_9b7382b5b7b0d1::t_e45a27bea49eb6 1-48
+src/components/app-shell.tsx
+  s_9b7382b5b7b0d1::t_d57f6a5473136d 19
+src/components/readiness-test.tsx
+  s_9b7382b5b7b0d1::t_cc99abfa1c05d6 22
+  s_9b7382b5b7b0d1::t_dff188963115a3 67
+  s_9b7382b5b7b0d1::t_818fb4b719a84a 50-53
+  s_9b7382b5b7b0d1::t_1b67688f850115 137,143-145,170-172
+  s_9b7382b5b7b0d1::t_3508c52275aaa9 224-262
+  s_9b7382b5b7b0d1::t_1d2f5e35d3f997 338-339,341
+src/app/dashboard/radar/page.tsx
+  s_9b7382b5b7b0d1::t_4b950a5c0065f3 187-192
+  s_9b7382b5b7b0d1::t_928a0bb9f8b7be 123-128
+  s_9b7382b5b7b0d1::t_422d6a5ce4a6c1 4
+src/app/dashboard/resume/page.tsx
+  s_9b7382b5b7b0d1::t_6e2c4e42f8f24c 36
+supabase/migrations/0008_product_assessments.sql
+  s_9b7382b5b7b0d1::t_c28b3aa35937fd 1-31
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "7f58f37927e8478493215b281842a027d893c2ae",
+  "prompts": {},
+  "sessions": {
+    "s_9b7382b5b7b0d1": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_0281697f1ffennuLtHOO7dvmcF",
+        "model": "deepseek-v4-flash-free"
+      },
+      "human_author": "Amarnath Ojha <amarnathojha071@gmail.com>"
+    }
+  }
+}
