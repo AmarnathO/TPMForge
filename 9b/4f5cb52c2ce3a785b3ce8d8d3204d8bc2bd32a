@@ -1,0 +1,36 @@
+src/lib/product-agent.ts
+  s_9b7382b5b7b0d1::t_7745e1f1355650 351-379
+  s_9b7382b5b7b0d1::t_9cf200e3dc10a6 445-447
+  s_9b7382b5b7b0d1::t_fcb56565ba4748 238-320
+  s_9b7382b5b7b0d1::t_ff7e44a57b537e 475
+src/lib/product-assessments.ts
+  s_9b7382b5b7b0d1::t_496fb3b6eb759d 125-127
+  s_9b7382b5b7b0d1::t_bca5c24466b379 76-78
+  s_9b7382b5b7b0d1::t_0eaeded7a85a5f 3,15,22
+src/components/product-agent.tsx
+  s_9b7382b5b7b0d1::t_e346a0509ee872 135
+  s_9b7382b5b7b0d1::t_2401602b95fba9 234-316
+  s_9b7382b5b7b0d1::t_40f133ef7c3e24 160-162
+  s_9b7382b5b7b0d1::t_ed572e23fa71df 190-201,213-216
+  s_9b7382b5b7b0d1::t_34c216c3d0629a 729-735,739,743-744,747
+src/app/actions/product-agent.ts
+  s_9b7382b5b7b0d1::t_27022984bf924e 12
+  s_9b7382b5b7b0d1::t_8ffe87db622d24 179-181
+  s_9b7382b5b7b0d1::t_7583b59bafba90 86-88
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "9b4f5cb52c2ce3a785b3ce8d8d3204d8bc2bd32a",
+  "prompts": {},
+  "sessions": {
+    "s_9b7382b5b7b0d1": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_0281697f1ffennuLtHOO7dvmcF",
+        "model": "deepseek-v4-flash-free"
+      },
+      "human_author": "Amarnath Ojha <amarnathojha071@gmail.com>"
+    }
+  }
+}
