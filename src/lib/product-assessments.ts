@@ -1,5 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { ProductAgentResult } from "@/lib/product-agent";
+import { buildMcqResults } from "@/lib/product-agent";
 
 export interface ProductAssessmentRow {
   id: string;
@@ -11,13 +12,14 @@ export interface ProductAssessmentRow {
   summary: string | null;
   answer_feedback: Record<string, unknown> | null;
   roadmap: unknown[] | null;
+  answers: Record<string, string> | null;
   model: string | null;
   graded: boolean | null;
   created_at: string;
 }
 
 export const PRODUCT_ASSESSMENT_SELECT =
-  "id, overall_score, mcq_score, descriptive_score, dimension_scores, category_scores, summary, answer_feedback, roadmap, model, graded, created_at";
+  "id, overall_score, mcq_score, descriptive_score, dimension_scores, category_scores, summary, answer_feedback, roadmap, answers, model, graded, created_at";
 
 export async function getLatestProductAssessment(
   supabase: SupabaseClient,
@@ -71,6 +73,9 @@ export function productAssessmentFromRow(
   };
 
   const mcqScore = row.mcq_score ?? 0;
+  const mcqResults = buildMcqResults(row.answers ?? {});
+  const mcqCorrect = mcqResults.filter((r) => r.correct).length;
+  const mcqTotal = mcqResults.length;
   const rawCategory = row.category_scores ?? {};
   const hasCategory =
     typeof rawCategory.metrics === "number" ||
@@ -117,6 +122,9 @@ export function productAssessmentFromRow(
   return {
     overallScore: row.overall_score,
     mcqScore: mcqScore,
+    mcqCorrect,
+    mcqTotal,
+    mcqResults,
     descriptiveScore: row.descriptive_score,
     categoryScores,
     dimensionScores,

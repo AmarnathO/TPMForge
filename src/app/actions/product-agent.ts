@@ -9,6 +9,7 @@ import {
 import {
   PRODUCT_QUESTIONS,
   PRODUCT_AGENT_SYSTEM_PROMPT,
+  buildMcqResults,
   buildProductAgentPrompt,
   productDescriptiveQuestions,
   scoreProductMcq,
@@ -82,6 +83,9 @@ export async function submitProductAssessment(
   let result: ProductAgentResult = {
     overallScore: mcq.score,
     mcqScore: mcq.score,
+    mcqCorrect: mcq.correct,
+    mcqTotal: mcq.total,
+    mcqResults: buildMcqResults(answers),
     descriptiveScore: null,
     categoryScores: byCategory.categoryScores,
     dimensionScores: {},
@@ -172,6 +176,9 @@ export async function submitProductAssessment(
           ? mcq.score
           : category.overallScore,
       mcqScore: mcq.score,
+      mcqCorrect: mcq.correct,
+      mcqTotal: mcq.total,
+      mcqResults: buildMcqResults(answers),
       descriptiveScore,
       categoryScores: category.categoryScores,
       dimensionScores,

@@ -132,7 +132,7 @@ const renderResult = (r: ProductAgentResult) => {
               </p>
               <p className="mt-1 text-xs text-zinc-500">
                 {r.graded
-                  ? "6 multiple-choice · 4 written answers evaluated by your Product Mentor"
+                  ? "10 multiple-choice · 5 written answers evaluated by your Product Mentor"
                   : "Your multiple-choice score is saved — written evaluation was unavailable."}
               </p>
             </div>
@@ -157,7 +157,9 @@ const renderResult = (r: ProductAgentResult) => {
               {r.mcqScore}/100
             </p>
             <p className="mt-1 text-xs text-zinc-500">
-              Real-life scenarios, metrics, and trade-offs.
+              {r.mcqTotal > 0
+                ? `${r.mcqCorrect} of ${r.mcqTotal} multiple-choice answers correct.`
+                : "Real-life scenarios, metrics, and trade-offs."}
             </p>
           </div>
           <div className="rounded-2xl border border-zinc-800 bg-zinc-900/40 p-5">
@@ -185,6 +187,18 @@ const renderResult = (r: ProductAgentResult) => {
           <div className="space-y-4">
             {CATEGORY_META.map((c) => {
               const score = r.categoryScores?.[c.key] ?? 0;
+              const mcqs = r.mcqResults.filter((m) => m.category === c.key);
+              const mcqCorrect = mcqs.filter((m) => m.correct).length;
+              const written = PRODUCT_QUESTIONS.filter(
+                (q) => q.kind === "descriptive" && q.category === c.key && r.answerFeedback?.[q.id]
+              );
+              const writtenAvg =
+                written.length > 0
+                  ? Math.round(
+                      written.reduce((sum, q) => sum + (r.answerFeedback[q.id]?.score ?? 0), 0) /
+                        written.length
+                    )
+                  : null;
               return (
                 <div key={c.key}>
                   <div className="mb-1.5 flex items-center justify-between gap-3">
@@ -196,6 +210,10 @@ const renderResult = (r: ProductAgentResult) => {
                         </span>
                       </p>
                       <p className="text-xs text-zinc-500">{c.description}</p>
+                      <p className="mt-0.5 text-[11px] text-zinc-600">
+                        MCQ {mcqCorrect}/{mcqs.length}
+                        {writtenAvg !== null ? ` · Written ${writtenAvg}` : ""}
+                      </p>
                     </div>
                     <span className={`text-sm font-bold ${scoreColor(score)}`}>
                       {score}/100
@@ -212,6 +230,89 @@ const renderResult = (r: ProductAgentResult) => {
             })}
           </div>
         </div>
+
+        {r.mcqResults.length > 0 && (
+          <div className="rounded-2xl border border-zinc-800 bg-zinc-900/40 p-6">
+            <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+              <h3 className="text-sm font-semibold text-zinc-100">
+                Question-by-question review
+              </h3>
+              <span className="rounded-full border border-zinc-700 px-2.5 py-0.5 text-[11px] font-medium text-zinc-400">
+                {r.mcqCorrect}/{r.mcqTotal} correct
+              </span>
+            </div>
+            <div className="space-y-3">
+              {r.mcqResults.map((item) => {
+                const cat = CATEGORY_META.find((c) => c.key === item.category);
+                return (
+                  <div
+                    key={item.id}
+                    className={`rounded-xl border p-4 ${
+                      item.correct
+                        ? "border-emerald-500/30 bg-emerald-500/5"
+                        : "border-rose-500/30 bg-rose-500/5"
+                    }`}
+                  >
+                    <div className="flex flex-wrap items-center justify-between gap-3">
+                      <div className="flex items-center gap-2">
+                        <span
+                          className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-semibold ${
+                            item.correct
+                              ? "bg-emerald-500/15 text-emerald-300"
+                              : "bg-rose-500/15 text-rose-300"
+                          }`}
+                        >
+                          {item.correct ? (
+                            <CheckCircle2 className="h-3 w-3" />
+                          ) : (
+                            <AlertTriangle className="h-3 w-3" />
+                          )}
+                          {item.correct ? "Correct" : "Incorrect"}
+                        </span>
+                        {cat && (
+                          <span className="rounded-full border border-zinc-700 px-2 py-0.5 text-[11px] text-zinc-400">
+                            {cat.label}
+                          </span>
+                        )}
+                      </div>
+                      <span className="text-[11px] text-zinc-600">
+                        Q{item.id.replace("pm-", "")}
+                      </span>
+                    </div>
+                    <p className="mt-3 text-sm font-medium text-zinc-200">
+                      {item.question}
+                    </p>
+                    {item.chosenIndex !== null && (
+                      <p
+                        className={`mt-2 text-xs ${
+                          item.correct
+                            ? "text-emerald-300"
+                            : "text-rose-300"
+                        }`}
+                      >
+                        Your answer:{" "}
+                        <span className="text-zinc-300">
+                          {item.options[item.chosenIndex]}
+                        </span>
+                      </p>
+                    )}
+                    {!item.correct && (
+                      <p className="mt-1 text-xs text-emerald-300">
+                        Correct answer:{" "}
+                        <span className="text-zinc-300">
+                          {item.options[item.correctIndex]}
+                        </span>
+                      </p>
+                    )}
+                    <p className="mt-2 text-xs leading-relaxed text-zinc-500">
+                      {item.explanation}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
         {r.summary && (
           <div className="rounded-2xl border border-violet-500/30 bg-violet-500/5 p-6">
@@ -625,23 +726,25 @@ const renderResult = (r: ProductAgentResult) => {
             Product Mentor Agent
           </h2>
           <p className="mt-3 text-sm leading-relaxed text-zinc-400">
-            Ten real-life product questions — six multiple-choice on scenarios,
-            metrics, and trade-offs, plus four written answers where you reason
-            like a PM. Your Product Mentor, an AI senior PM with 15+ years of
-            experience, evaluates your written answers on six dimensions and
-            builds a personalized product-understanding roadmap.
+            Fifteen real-life product questions — ten multiple-choice on
+            scenarios, metrics, pricing, and trade-offs, plus five written
+            answers where you reason like a PM. Your Product Mentor, an AI
+            senior PM with 15+ years of experience, evaluates your written
+            answers on six dimensions, tells you exactly which questions you
+            got right or wrong, and builds a personalized
+            product-understanding roadmap.
           </p>
           <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-3">
             <div className="rounded-xl border border-zinc-800 bg-zinc-950/50 p-4">
-              <p className="text-2xl font-bold text-violet-300">10</p>
+              <p className="text-2xl font-bold text-violet-300">15</p>
               <p className="mt-1 text-xs text-zinc-500">real-life questions</p>
             </div>
             <div className="rounded-xl border border-zinc-800 bg-zinc-950/50 p-4">
-              <p className="text-2xl font-bold text-violet-300">6</p>
-              <p className="mt-1 text-xs text-zinc-500">PM dimensions scored</p>
+              <p className="text-2xl font-bold text-violet-300">10</p>
+              <p className="mt-1 text-xs text-zinc-500">right-or-wrong reviews</p>
             </div>
             <div className="rounded-xl border border-zinc-800 bg-zinc-950/50 p-4">
-              <p className="text-2xl font-bold text-violet-300">~15 min</p>
+              <p className="text-2xl font-bold text-violet-300">~20 min</p>
               <p className="mt-1 text-xs text-zinc-500">to complete</p>
             </div>
           </div>

@@ -235,6 +235,89 @@ export const PRODUCT_QUESTIONS: ProductQuestion[] = [
     question:
       "How would you prioritize the first six months? What would you say 'no' to, and how would you defend the roadmap to the board?",
   },
+  {
+    id: "pm-11",
+    category: "metrics",
+    dimension: "metrics",
+    difficulty: "intermediate",
+    kind: "mcq",
+    question:
+      "You raised the price of your Pro plan by 20%. Revenue per paying customer is up 18%, but the downgrade rate doubled and support complaints are rising. What is the strongest move?",
+    options: [
+      "Revert the price immediately — 18% revenue per customer isn't worth the churn risk",
+      "Hold the price and wait one more quarter for complaints to settle",
+      "Segment the outcome by plan tier, upgrade path, and customer segment, and compute net revenue retention per segment before deciding",
+      "Raise prices again on the top tier to offset the expected downgrades",
+    ],
+    correctIndex: 2,
+    explanation:
+      "Net revenue retention per segment is the decision metric. +18% ARPU that doubles downgrades can raise or destroy total revenue depending on segment mix — so diagnose before reversing. The price may be right for some segments and wrong for others.",
+  },
+  {
+    id: "pm-12",
+    category: "product",
+    dimension: "discovery",
+    difficulty: "intermediate",
+    kind: "mcq",
+    question:
+      "Your team wants to 'fix onboarding' after signup-to-activation fell 20% this quarter. Before writing a single requirement, what is the strongest move?",
+    options: [
+      "Ship a shorter, simpler onboarding flow to reduce friction",
+      "Define the activation metric precisely, then split the drop by signup source, device, and user intent to find where and for whom it breaks",
+      "Interview five recently-churned customers about the product in general",
+      "Benchmark onboarding against a competitor's flow and copy what wins",
+    ],
+    correctIndex: 1,
+    explanation:
+      "A 20% drop is an aggregate symptom, not a diagnosis. Frame the problem first: define activation, then cohort-split to locate the break before choosing a fix — otherwise you ship to a guess.",
+  },
+  {
+    id: "pm-13",
+    category: "metrics",
+    dimension: "metrics",
+    difficulty: "advanced",
+    kind: "mcq",
+    question:
+      "You launched an AI assistant that answers customer questions. Users love it, but executives keep asking whether it's 'working.' Which metric set most honestly measures whether it drives value?",
+    options: [
+      "User ratings of answers and total messages sent",
+      "Weekly active usage of the assistant",
+      "Resolution rate without human handoff, support-ticket deflection, and retention of AI-assisted customers compared against a control cohort",
+      "Model latency and token cost per session",
+    ],
+    correctIndex: 2,
+    explanation:
+      "Usage and ratings are proxy signals. The honest set ties the assistant to business outcomes (deflection, resolution, retention) against a control cohort — and keeps cost/latency as quality constraints, not success metrics.",
+  },
+  {
+    id: "pm-14",
+    category: "product",
+    dimension: "prioritization",
+    difficulty: "basic",
+    kind: "mcq",
+    question:
+      "You're building a brand-new feature for an existing B2B customer base and have 10 weeks before a board checkpoint. Which validation approach gives you the most confidence with the least spend?",
+    options: [
+      "Build the full feature in 8 weeks and let customers react at the board demo",
+      "Run a paid pilot with 3 design partners on a manual or concierge version of the flow to test willingness to use and pay",
+      "Survey 500 customers online asking if they'd use it",
+      "Defer the work until the next roadmap planning cycle",
+    ],
+    correctIndex: 1,
+    explanation:
+      "A concierge or pilot tests real willingness to use and pay at a fraction of the build cost. Surveys capture stated intent (unreliable), and full builds surface reaction only after sunk cost.",
+  },
+  {
+    id: "pm-15",
+    category: "scenario",
+    dimension: "communication",
+    difficulty: "advanced",
+    kind: "descriptive",
+    scenario:
+      "Your AI assistant feature started recommending financial advice to customers, and a compliance leader wants it shut down today. Legal, engineering, and the CEO are in conflict, and the feature drives meaningful engagement.",
+    question:
+      "Walk through how you'd handle this: the investigation you'd run, the decision framework, and how you'd align legal, engineering, and the CEO before anyone ships or kills it.",
+  },
 ];
 
 export type ProductAnswers = Record<string, string>;
@@ -263,6 +346,35 @@ export function scoreProductMcq(answers: ProductAnswers): {
     total: mcq.length,
     score: mcq.length > 0 ? Math.round((correct / mcq.length) * 100) : 0,
   };
+}
+
+export interface ProductMcqResult {
+  id: string;
+  question: string;
+  options: string[];
+  correctIndex: number;
+  chosenIndex: number | null;
+  correct: boolean;
+  explanation: string;
+  category: AssessmentCategory;
+}
+
+export function buildMcqResults(answers: ProductAnswers): ProductMcqResult[] {
+  return productMcqQuestions().map((q) => {
+    const raw = answers[q.id];
+    const chosenIndex =
+      raw === undefined || raw === "" ? null : Number(raw);
+    return {
+      id: q.id,
+      question: q.question,
+      options: q.options,
+      correctIndex: q.correctIndex,
+      chosenIndex: Number.isInteger(chosenIndex) ? (chosenIndex as number) : null,
+      correct: chosenIndex !== null && chosenIndex === q.correctIndex,
+      explanation: q.explanation,
+      category: q.category,
+    };
+  });
 }
 
 function combineBuckets(mcq: number[], descriptive: number[]): number {
@@ -330,6 +442,9 @@ export interface ProductRoadmapItem {
 export interface ProductAgentResult {
   overallScore: number;
   mcqScore: number;
+  mcqCorrect: number;
+  mcqTotal: number;
+  mcqResults: ProductMcqResult[];
   descriptiveScore: number | null;
   categoryScores: Record<AssessmentCategory, number>;
   dimensionScores: Partial<Record<ProductDimension, number>>;
@@ -357,7 +472,7 @@ export const PRODUCT_AGENT_SYSTEM_PROMPT = [
   "- The overall assessment weights Metrics 70%, Product Problem 20%, Scenario 10%. Be especially rigorous on data & metrics: the right metric, cohort logic, experiment rigor, and quantified impact.",
   "- Feedback: 2-3 sentences per answer. Strengths and gaps: 1-2 short bullets each, defensible from the text.",
   "- Score the six dimension scores in 'dimensions' based on all evidence in the answers; if evidence for a dimension is thin, score it conservatively.",
-  "- You will receive EXACTLY 4 descriptive answers with ids pm-7, pm-8, pm-9, pm-10. The 'answers' array MUST contain one entry for EACH of the 4 ids — never fewer, never more.",
+  "- You will receive EXACTLY 5 descriptive answers with ids pm-7, pm-8, pm-9, pm-10, pm-15. The 'answers' array MUST contain one entry for EACH of the 5 ids — never fewer, never more.",
   "- Produce EXACTLY 5 roadmap items for product understanding, ordered highest impact first. Each item: topic (a product skill), why (tie it to a specific gap found), exercise (a concrete 1-2 day practice), duration.",
   "- Respond with ONLY JSON, no markdown, no code fences, matching exactly this shape:",
   `{"answers":[{"id":"pm-7","score":68,"feedback":"<2-3 sentences>","strengths":["<bullet>"],"gaps":["<bullet>"]}],"dimensions":{"discovery":65,"strategy":70,"prioritization":55,"metrics":60,"execution":66,"communication":72},"summary":"<2-3 sentence mentor verdict: biggest strength and one critical gap>","roadmap":[{"topic":"<skill>","why":"<ties to a gap>","exercise":"<concrete practice>","duration":"1 week"}]}`,
