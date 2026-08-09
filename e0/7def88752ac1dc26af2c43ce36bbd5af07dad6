@@ -1,0 +1,24 @@
+src/app/actions/product-agent.ts
+  s_9b7382b5b7b0d1::t_7f50cf25d653be 112
+packages/core/src/llm/openrouter.ts
+  s_9b7382b5b7b0d1::t_7e1f15c48b4844 16
+  s_9b7382b5b7b0d1::t_b141e632ee6905 135-155,157-165
+src/app/dashboard/product-agent/page.tsx
+  s_9b7382b5b7b0d1::t_74e0fbfcf6072c 15
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "e07def88752ac1dc26af2c43ce36bbd5af07dad6",
+  "prompts": {},
+  "sessions": {
+    "s_9b7382b5b7b0d1": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_0281697f1ffennuLtHOO7dvmcF",
+        "model": "deepseek-v4-flash-free"
+      },
+      "human_author": "Amarnath Ojha <amarnathojha071@gmail.com>"
+    }
+  }
+}
