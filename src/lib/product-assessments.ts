@@ -21,16 +21,31 @@ export interface ProductAssessmentRow {
 export const PRODUCT_ASSESSMENT_SELECT =
   "id, overall_score, mcq_score, descriptive_score, dimension_scores, category_scores, summary, answer_feedback, roadmap, answers, model, graded, created_at";
 
+export const PRODUCT_ASSESSMENT_SELECT_LEGACY =
+  "id, overall_score, mcq_score, descriptive_score, dimension_scores, summary, answer_feedback, roadmap, answers, model, graded, created_at";
+
 export async function getLatestProductAssessment(
   supabase: SupabaseClient,
   userId: string
 ): Promise<ProductAssessmentRow | null> {
-  const { data } = await supabase
+  const first = await supabase
     .from("product_assessments")
     .select(PRODUCT_ASSESSMENT_SELECT)
     .eq("user_id", userId)
     .order("created_at", { ascending: false })
     .limit(1);
+
+  let data = first.data;
+  if (first.error && String(first.error.message).includes("category_scores")) {
+    const legacy = await supabase
+      .from("product_assessments")
+      .select(PRODUCT_ASSESSMENT_SELECT_LEGACY)
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false })
+      .limit(1);
+    data = legacy.data as typeof data;
+  }
+
   return (data?.[0] as ProductAssessmentRow | undefined) ?? null;
 }
 
