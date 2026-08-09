@@ -1,0 +1,20 @@
+src/components/product-agent.tsx
+  s_9b7382b5b7b0d1::t_d085071717d876 62,66-67
+  s_9b7382b5b7b0d1::t_08bf1f4bcb16c1 81,302,377,545
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "133202fb19d3365e95fa04c63ce13522312a5994",
+  "prompts": {},
+  "sessions": {
+    "s_9b7382b5b7b0d1": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_0281697f1ffennuLtHOO7dvmcF",
+        "model": "deepseek-v4-flash-free"
+      },
+      "human_author": "Amarnath Ojha <amarnathojha071@gmail.com>"
+    }
+  }
+}
