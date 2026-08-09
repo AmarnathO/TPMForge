@@ -4,11 +4,8 @@ import Link from "next/link";
 import { ArrowRight, ClipboardList, FileText } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { AppShell } from "@/components/app-shell";
-import { ReadinessReportView } from "@/components/readiness-report";
-import { ResumeUpload } from "@/components/resume-upload";
 import { StandView } from "@/components/stand-view";
 import { ReadinessTest } from "@/components/readiness-test";
-import { getLatestAnalysis, analysisToPayload } from "@/lib/analysis";
 import {
   getLatestReadinessTest,
   standFromRow,
@@ -20,7 +17,12 @@ export const metadata: Metadata = {
 
 export const maxDuration = 60;
 
-export default async function ReadinessPage() {
+export default async function ReadinessPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ retake?: string }>;
+}) {
+  const { retake } = await searchParams;
   const supabase = await createClient();
   const {
     data: { user },
@@ -30,12 +32,9 @@ export default async function ReadinessPage() {
     redirect("/login");
   }
 
-  const [latest, testRow] = await Promise.all([
-    getLatestAnalysis(supabase, user.id),
-    getLatestReadinessTest(supabase, user.id),
-  ]);
-
+  const testRow = await getLatestReadinessTest(supabase, user.id);
   const stand = testRow ? standFromRow(testRow) : null;
+  const showTest = !stand || retake === "1";
 
   return (
     <AppShell user={{ email: user.email ?? "" }}>
@@ -47,23 +46,30 @@ export default async function ReadinessPage() {
               Your TPM readiness
             </h1>
             <p className="mt-2 text-sm text-zinc-400">
-              Your current stand comes from the business · technology · product
-              test. Your resume gives a separate analysis, score, and
-              suggestions.
+              Your stand comes from the 36-question business · technology ·
+              product test.
             </p>
           </div>
-          <Link
-            href="/dashboard/roadmap"
-            className="inline-flex items-center gap-2 rounded-xl border border-zinc-700 px-4 py-2 text-sm font-medium text-zinc-300 transition hover:border-zinc-500 hover:text-zinc-100"
-          >
-            See roadmap <ArrowRight className="h-4 w-4" />
-          </Link>
+          <div className="flex flex-wrap items-center gap-3">
+            {stand && (
+              <Link
+                href="/dashboard/readiness?retake=1"
+                className="inline-flex items-center gap-2 rounded-xl border border-zinc-700 px-4 py-2 text-sm font-medium text-zinc-300 transition hover:border-zinc-500 hover:text-zinc-100"
+              >
+                Retake test
+              </Link>
+            )}
+            <Link
+              href="/dashboard/resume"
+              className="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-indigo-600/25 transition hover:bg-indigo-500"
+            >
+              Analyze resume <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
         </div>
 
         <div id="test" className="scroll-mt-24">
-          {stand ? (
-            <StandView stand={stand} />
-          ) : (
+          {showTest ? (
             <div className="rounded-2xl border border-dashed border-indigo-500/40 bg-indigo-500/5 p-8">
               <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center">
                 <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-indigo-600/20">
@@ -74,50 +80,61 @@ export default async function ReadinessPage() {
                     Measure your current TPM stand
                   </h3>
                   <p className="mt-1 text-sm text-zinc-400">
-                    30 questions — 10 each on business, technology, and product.
-                    Based on your answers, not your resume.
+                    12 questions each on business, technology, and product.
+                    Pick a section below — questions appear one at a time, from
+                    basic to pro.
                   </p>
                 </div>
               </div>
               <ReadinessTest />
             </div>
+          ) : (
+            <div className="space-y-6">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  <h2 className="text-sm font-semibold text-zinc-100">
+                    Your current stand
+                  </h2>
+                  <p className="mt-1 text-xs text-zinc-500">
+                    Score, competency graph, and suggested focus areas from your
+                    readiness test.
+                  </p>
+                </div>
+                <Link
+                  href="/dashboard/readiness?retake=1#test"
+                  className="inline-flex items-center gap-2 rounded-lg border border-zinc-700 px-3 py-2 text-xs font-medium text-zinc-300 transition hover:border-zinc-500 hover:text-zinc-100"
+                >
+                  Retake test
+                </Link>
+              </div>
+              <StandView stand={stand!} />
+            </div>
           )}
         </div>
 
-        <div className="mt-12">
-          <div className="mb-4 flex items-center gap-3">
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-600/20">
-              <FileText className="h-4 w-4 text-indigo-300" />
-            </span>
-            <div>
-              <h3 className="text-sm font-semibold text-zinc-100">
-                Resume analysis, scoring &amp; suggestions
-              </h3>
-              <p className="text-xs text-zinc-500">
-                Your resume is analyzed separately — match score, competency
-                gaps, and learning suggestions.
-              </p>
-            </div>
-          </div>
-          {latest ? (
-            <>
-              <ReadinessReportView report={analysisToPayload(latest)} />
-              <div className="mt-8 rounded-2xl border border-zinc-800 bg-zinc-900/40 p-6">
+        <div className="mt-12 rounded-2xl border border-zinc-800 bg-zinc-900/40 p-6">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-start gap-3">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-indigo-600/20">
+                <FileText className="h-4 w-4 text-indigo-300" />
+              </span>
+              <div>
                 <h3 className="text-sm font-semibold text-zinc-100">
-                  Refresh your analysis
+                  Resume analysis, scoring &amp; suggestions
                 </h3>
                 <p className="mt-1 text-xs text-zinc-500">
-                  Upload a newer resume to update your match score and
-                  suggestions.
+                  Upload your resume to get a separate match score, competency
+                  gaps, and suggestions to fix it.
                 </p>
-                <div className="mt-4">
-                  <ResumeUpload />
-                </div>
               </div>
-            </>
-          ) : (
-            <ResumeUpload />
-          )}
+            </div>
+            <Link
+              href="/dashboard/resume"
+              className="inline-flex shrink-0 items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-600/25 transition hover:bg-indigo-500"
+            >
+              Go to resume analysis <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
         </div>
       </div>
     </AppShell>

@@ -92,43 +92,23 @@ export function OnboardingForm() {
         </select>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-        <div>
-          <label
-            htmlFor="timelineWeeks"
-            className="mb-2 block text-sm font-medium text-zinc-300"
-          >
-            Target timeline (weeks)
-          </label>
-          <input
-            id="timelineWeeks"
-            name="timelineWeeks"
-            type="number"
-            min={4}
-            max={156}
-            required
-            placeholder="e.g. 12"
-            className="w-full rounded-xl border border-zinc-700 bg-zinc-900 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/40"
-          />
-        </div>
-        <div>
-          <label
-            htmlFor="weeklyHours"
-            className="mb-2 block text-sm font-medium text-zinc-300"
-          >
-            Hours per week
-          </label>
-          <input
-            id="weeklyHours"
-            name="weeklyHours"
-            type="number"
-            min={1}
-            max={40}
-            required
-            placeholder="e.g. 5"
-            className="w-full rounded-xl border border-zinc-700 bg-zinc-900 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/40"
-          />
-        </div>
+      <div>
+        <label
+          htmlFor="weeklyHours"
+          className="mb-2 block text-sm font-medium text-zinc-300"
+        >
+          Hours per week
+        </label>
+        <input
+          id="weeklyHours"
+          name="weeklyHours"
+          type="number"
+          min={1}
+          max={40}
+          required
+          placeholder="e.g. 5"
+          className="w-full rounded-xl border border-zinc-700 bg-zinc-900 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/40"
+        />
       </div>
 
       <button
@@ -136,7 +116,7 @@ export function OnboardingForm() {
         disabled={pending}
         className="mt-2 rounded-xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-600/25 transition hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-60"
       >
-        {pending ? "Setting up..." : "Build my roadmap"}
+        {pending ? "Saving..." : "Save"}
       </button>
 
       <p className="text-xs text-zinc-500">

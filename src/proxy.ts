@@ -57,8 +57,16 @@ export default async function proxy(request: NextRequest) {
   }
 
   if (isAuthPage && user) {
+    let onboardingComplete = false;
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("onboarding_completed")
+      .eq("id", user.id)
+      .maybeSingle();
+    onboardingComplete = profile?.onboarding_completed === true;
+
     const url = request.nextUrl.clone();
-    url.pathname = "/onboarding";
+    url.pathname = onboardingComplete ? "/dashboard" : "/onboarding";
     url.search = "";
     return NextResponse.redirect(url);
   }

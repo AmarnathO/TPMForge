@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState, useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   Upload,
   FileText,
@@ -30,7 +31,7 @@ function formatBytes(bytes: number) {
   return `${bytes} B`;
 }
 
-export function ResumeUpload() {
+export function ResumeUpload({ redirectTo }: { redirectTo?: string }) {
   const [state, formAction, pending] = useActionState(
     analyzeResume,
     initialState
@@ -39,6 +40,13 @@ export function ResumeUpload() {
   const [fileSize, setFileSize] = useState<number>(0);
   const [reviewStep, setReviewStep] = useState(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (state.status === "success" && redirectTo) {
+      router.push(redirectTo);
+    }
+  }, [state.status, redirectTo, router]);
 
   useEffect(() => {
     if (!pending) return;
@@ -138,7 +146,7 @@ export function ResumeUpload() {
               {pending ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />
-                  Analyzing… up to a minute
+                  Analyzing…
                 </>
               ) : hasFile ? (
                 "Analyze my resume"
@@ -169,10 +177,6 @@ export function ResumeUpload() {
             <div className="h-3 w-4/6 animate-pulse rounded-full bg-zinc-800" />
             <div className="h-3 w-3/4 animate-pulse rounded-full bg-zinc-800" />
           </div>
-          <p className="mt-3 text-xs text-zinc-500">
-            Free AI models can take up to a minute. Hang tight — your report is
-            on its way.
-          </p>
         </div>
       )}
 
@@ -183,7 +187,7 @@ export function ResumeUpload() {
         </div>
       )}
 
-      {state.status === "success" && state.report && (
+      {state.status === "success" && state.report && !redirectTo && (
         <ReadinessReportView report={state.report} />
       )}
     </div>

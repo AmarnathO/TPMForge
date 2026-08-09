@@ -65,7 +65,7 @@ export default async function RoadmapPage() {
                 then unlock the plan with a membership.
               </p>
               <div className="mx-auto mt-6 max-w-lg">
-                <ResumeUpload />
+                <ResumeUpload redirectTo="/dashboard/resume" />
               </div>
             </div>
           ) : (
@@ -128,7 +128,7 @@ export default async function RoadmapPage() {
               the readiness test and upload a resume to get started.
             </p>
             <div className="mx-auto mt-6 max-w-lg">
-              <ResumeUpload />
+              <ResumeUpload redirectTo="/dashboard/resume" />
             </div>
           </div>
         ) : (

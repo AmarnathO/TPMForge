@@ -1,5 +1,7 @@
 export type ReadinessAspect = "business" | "technology" | "product";
 
+export type QuestionDifficulty = "basic" | "intermediate" | "pro";
+
 export const ASPECTS: {
   key: ReadinessAspect;
   label: string;
@@ -22,6 +24,18 @@ export const ASPECTS: {
   },
 ];
 
+export const DIFFICULTY_MIX: Record<QuestionDifficulty, number> = {
+  basic: 2,
+  intermediate: 4,
+  pro: 6,
+};
+
+export const DIFFICULTY_LABEL: Record<QuestionDifficulty, string> = {
+  basic: "Basic",
+  intermediate: "Intermediate",
+  pro: "Pro",
+};
+
 export interface ReadinessQuestionOption {
   label: string;
   points: number;
@@ -30,39 +44,45 @@ export interface ReadinessQuestionOption {
 export interface ReadinessQuestion {
   id: string;
   aspect: ReadinessAspect;
+  difficulty: QuestionDifficulty;
   prompt: string;
   options: ReadinessQuestionOption[];
 }
 
 export const READINESS_QUESTIONS: ReadinessQuestion[] = [
-  // --- Business ---
+  // =====================================================================
+  // BUSINESS — 2 basic, 4 intermediate, 6 pro
+  // =====================================================================
   {
-    id: "biz-1",
+    id: "biz-b1",
     aspect: "business",
+    difficulty: "basic",
     prompt:
-      "A feature is expected to add ₹40/user/month in revenue and ₹5/user/month in support savings, at ₹12/user/month in extra infra cost. CAC is ₹4,800. What do you evaluate first?",
+      "A product is sold for ₹10 and costs ₹8 to produce and deliver. What is the gross margin?",
     options: [
-      { label: "Compute the payback period (CAC ÷ monthly contribution) before building.", points: 3 },
-      { label: "Ship fast to win market share before competitors move.", points: 0 },
-      { label: "Compare gross revenue against engineering effort only.", points: 1 },
-      { label: "Estimate gross margin as revenue minus infra cost.", points: 2 },
+      { label: "20% — profit is ₹2 on a ₹10 sale.", points: 3 },
+      { label: "80% — costs are 80% of the price.", points: 1 },
+      { label: "₹2 — the absolute rupee profit.", points: 1 },
+      { label: "Not enough information to say.", points: 0 },
     ],
   },
   {
-    id: "biz-2",
+    id: "biz-b2",
     aspect: "business",
+    difficulty: "basic",
     prompt:
-      "Two projects both clear their cost of capital. Project A returns ₹9L in year 1, Project B returns ₹14L in year 3. Budget only allows one. What drives your decision?",
+      "If 10% of a product's customers cancel every month, roughly how long does an average customer stay?",
     options: [
-      { label: "Time-value of money and strategic alignment, not just nominal returns.", points: 3 },
-      { label: "Always pick the larger absolute return.", points: 0 },
-      { label: "Pick whichever engineering estimates look cheapest.", points: 1 },
-      { label: "Split the budget 50/50 to reduce risk.", points: 2 },
+      { label: "About 10 months (lifetime ≈ 1 ÷ churn).", points: 3 },
+      { label: "About 1 month.", points: 0 },
+      { label: "About 90 days.", points: 1 },
+      { label: "Churn alone can't tell us anything about lifetime.", points: 1 },
     ],
   },
   {
     id: "biz-3",
     aspect: "business",
+    difficulty: "intermediate",
     prompt:
       "You raise prices 10% and see signups drop 4%. What does this tell you?",
     options: [
@@ -75,6 +95,7 @@ export const READINESS_QUESTIONS: ReadinessQuestion[] = [
   {
     id: "biz-4",
     aspect: "business",
+    difficulty: "intermediate",
     prompt:
       "Leadership asks for a bottom-up TAM estimate for a new segment. What's the correct approach?",
     options: [
@@ -87,6 +108,7 @@ export const READINESS_QUESTIONS: ReadinessQuestion[] = [
   {
     id: "biz-5",
     aspect: "business",
+    difficulty: "intermediate",
     prompt:
       "One product line has a 62% gross margin, another has 28%. Both grow similarly. What's the financially sound move?",
     options: [
@@ -97,20 +119,9 @@ export const READINESS_QUESTIONS: ReadinessQuestion[] = [
     ],
   },
   {
-    id: "biz-6",
-    aspect: "business",
-    prompt:
-      "Monthly churn is 5%. Roughly what does that imply about average customer lifetime?",
-    options: [
-      { label: "Average lifetime ≈ 1/0.05 ≈ 20 months — assess LTV against CAC.", points: 3 },
-      { label: "Lifetime is exactly 5% of the customer base.", points: 0 },
-      { label: "Lifetime is roughly 12 months by convention.", points: 1 },
-      { label: "Churn alone says nothing about lifetime value.", points: 1 },
-    ],
-  },
-  {
     id: "biz-7",
     aspect: "business",
+    difficulty: "intermediate",
     prompt:
       "To expand your user base, engineering proposes a free tier. Which decision framework is sound?",
     options: [
@@ -121,8 +132,48 @@ export const READINESS_QUESTIONS: ReadinessQuestion[] = [
     ],
   },
   {
+    id: "biz-1",
+    aspect: "business",
+    difficulty: "pro",
+    prompt:
+      "A feature is expected to add ₹40/user/month in revenue and ₹5/user/month in support savings, at ₹12/user/month in extra infra cost. CAC is ₹4,800. What do you evaluate first?",
+    options: [
+      { label: "Compute the payback period (CAC ÷ monthly contribution) before building.", points: 3 },
+      { label: "Ship fast to win market share before competitors move.", points: 0 },
+      { label: "Compare gross revenue against engineering effort only.", points: 1 },
+      { label: "Estimate gross margin as revenue minus infra cost.", points: 2 },
+    ],
+  },
+  {
+    id: "biz-2",
+    aspect: "business",
+    difficulty: "pro",
+    prompt:
+      "Two projects both clear their cost of capital. Project A returns ₹9L in year 1, Project B returns ₹14L in year 3. Budget only allows one. What drives your decision?",
+    options: [
+      { label: "Time-value of money and strategic alignment, not just nominal returns.", points: 3 },
+      { label: "Always pick the larger absolute return.", points: 0 },
+      { label: "Pick whichever engineering estimates look cheapest.", points: 1 },
+      { label: "Split the budget 50/50 to reduce risk.", points: 2 },
+    ],
+  },
+  {
+    id: "biz-6",
+    aspect: "business",
+    difficulty: "pro",
+    prompt:
+      "Monthly churn is 5% and CAC is ₹2,400. A customer contributes ₹300/month after variable costs. Is the unit economics sustainable?",
+    options: [
+      { label: "Lifetime ≈ 20 months, so LTV ≈ ₹6,000 vs CAC ₹2,400 — a healthy 2.5x ratio.", points: 3 },
+      { label: "Lifetime is exactly 5% of the customer base — unsustainable.", points: 0 },
+      { label: "Lifetime is roughly 12 months by convention, so LTV ≈ ₹3,600 — acceptable.", points: 1 },
+      { label: "Churn alone says nothing about lifetime value.", points: 1 },
+    ],
+  },
+  {
     id: "biz-8",
     aspect: "business",
+    difficulty: "pro",
     prompt:
       "A vendor contract saves 12% of infra cost but locks you in for 2 years with a 40% overage penalty. What do you weigh?",
     options: [
@@ -133,20 +184,9 @@ export const READINESS_QUESTIONS: ReadinessQuestion[] = [
     ],
   },
   {
-    id: "biz-9",
-    aspect: "business",
-    prompt:
-      "A competitor ships a lookalike of your flagship feature in two weeks. Your best response?",
-    options: [
-      { label: "Assess what your customers actually value, then double down on your differentiation.", points: 3 },
-      { label: "Rush an identical feature out to match.", points: 0 },
-      { label: "Lower all prices to undercut them.", points: 1 },
-      { label: "Ignore them; competitors don't matter.", points: 0 },
-    ],
-  },
-  {
     id: "biz-10",
     aspect: "business",
+    difficulty: "pro",
     prompt:
       "You must defend next quarter's plan to finance. Which framing lands best?",
     options: [
@@ -156,23 +196,53 @@ export const READINESS_QUESTIONS: ReadinessQuestion[] = [
       { label: "Present the plan as a reaction to competitor moves.", points: 1 },
     ],
   },
-
-  // --- Technology ---
   {
-    id: "tech-1",
-    aspect: "technology",
+    id: "biz-9",
+    aspect: "business",
+    difficulty: "pro",
     prompt:
-      "A public REST API you own has a breaking change to a widely used endpoint. What's the safest path?",
+      "A competitor ships a lookalike of your flagship feature in two weeks. Your best response?",
     options: [
-      { label: "Add a versioned endpoint (e.g., /v2) and migrate consumers before deprecating v1.", points: 3 },
-      { label: "Change the contract in place and update the docs.", points: 0 },
-      { label: "Add optional fields and call it backward compatible even if defaults change behavior.", points: 1 },
-      { label: "Keep the old field but silently drop its data.", points: 0 },
+      { label: "Assess what your customers actually value, then double down on your differentiation.", points: 3 },
+      { label: "Rush an identical feature out to match.", points: 0 },
+      { label: "Lower all prices to undercut them.", points: 1 },
+      { label: "Ignore them; competitors don't matter.", points: 0 },
+    ],
+  },
+
+  // =====================================================================
+  // TECHNOLOGY — 2 basic, 4 intermediate, 6 pro
+  // =====================================================================
+  {
+    id: "tech-b1",
+    aspect: "technology",
+    difficulty: "basic",
+    prompt:
+      "What is the main difference between horizontal and vertical scaling?",
+    options: [
+      { label: "Horizontal adds more machines to share load; vertical makes one machine bigger.", points: 3 },
+      { label: "Vertical adds more machines; horizontal makes one machine bigger.", points: 0 },
+      { label: "They are the same thing under different names.", points: 0 },
+      { label: "Horizontal only applies to databases.", points: 1 },
+    ],
+  },
+  {
+    id: "tech-b2",
+    aspect: "technology",
+    difficulty: "basic",
+    prompt:
+      "What is a database index primarily used for?",
+    options: [
+      { label: "Speeding up lookups and queries on large tables.", points: 3 },
+      { label: "Storing backups of the database.", points: 0 },
+      { label: "Encrypting data at rest.", points: 0 },
+      { label: "Enforcing user permissions.", points: 1 },
     ],
   },
   {
     id: "tech-2",
     aspect: "technology",
+    difficulty: "intermediate",
     prompt:
       "A slow analytics query joins several large tables and times out for users. The quickest high-leverage fix?",
     options: [
@@ -183,20 +253,9 @@ export const READINESS_QUESTIONS: ReadinessQuestion[] = [
     ],
   },
   {
-    id: "tech-3",
-    aspect: "technology",
-    prompt:
-      "A critical endpoint went from 90ms to 1.2s after a deploy. Your first diagnostic step?",
-    options: [
-      { label: "Check dashboards for latency breakdown, DB load, and recent deploy rollbacks in parallel.", points: 3 },
-      { label: "Restart all services to clear any cache.", points: 0 },
-      { label: "Add more instances immediately.", points: 1 },
-      { label: "Rewrite the endpoint to be async.", points: 0 },
-    ],
-  },
-  {
     id: "tech-4",
     aspect: "technology",
+    difficulty: "intermediate",
     prompt:
       "Traffic is 10x the forecast and the monolith is running hot. Which scaling approach is sound for the short term?",
     options: [
@@ -207,20 +266,9 @@ export const READINESS_QUESTIONS: ReadinessQuestion[] = [
     ],
   },
   {
-    id: "tech-5",
-    aspect: "technology",
-    prompt:
-      "A team proposes skipping a refactor to ship a feature that likely drives 20% more signups. The system is fragile. What's the balanced call?",
-    options: [
-      { label: "Refactor the hot path the feature depends on, and ship the rest iteratively.", points: 3 },
-      { label: "Ship the feature and fix broken things when they break.", points: 0 },
-      { label: "Refactor everything before any feature work.", points: 1 },
-      { label: "Cancel the feature to protect code quality.", points: 0 },
-    ],
-  },
-  {
     id: "tech-6",
     aspect: "technology",
+    difficulty: "intermediate",
     prompt:
       "You add a cache in front of a read-heavy API. What must you design for first?",
     options: [
@@ -233,6 +281,7 @@ export const READINESS_QUESTIONS: ReadinessQuestion[] = [
   {
     id: "tech-7",
     aspect: "technology",
+    difficulty: "intermediate",
     prompt:
       "A schema change will add a required column to a table with 50M rows. What's the safe rollout?",
     options: [
@@ -243,8 +292,48 @@ export const READINESS_QUESTIONS: ReadinessQuestion[] = [
     ],
   },
   {
+    id: "tech-1",
+    aspect: "technology",
+    difficulty: "pro",
+    prompt:
+      "A public REST API you own has a breaking change to a widely used endpoint. What's the safest path?",
+    options: [
+      { label: "Add a versioned endpoint (e.g., /v2) and migrate consumers before deprecating v1.", points: 3 },
+      { label: "Change the contract in place and update the docs.", points: 0 },
+      { label: "Add optional fields and call it backward compatible even if defaults change behavior.", points: 1 },
+      { label: "Keep the old field but silently drop its data.", points: 0 },
+    ],
+  },
+  {
+    id: "tech-3",
+    aspect: "technology",
+    difficulty: "pro",
+    prompt:
+      "A critical endpoint went from 90ms to 1.2s after a deploy. Your first diagnostic step?",
+    options: [
+      { label: "Check dashboards for latency breakdown, DB load, and recent deploy rollbacks in parallel.", points: 3 },
+      { label: "Restart all services to clear any cache.", points: 0 },
+      { label: "Add more instances immediately.", points: 1 },
+      { label: "Rewrite the endpoint to be async.", points: 0 },
+    ],
+  },
+  {
+    id: "tech-5",
+    aspect: "technology",
+    difficulty: "pro",
+    prompt:
+      "A team proposes skipping a refactor to ship a feature that likely drives 20% more signups. The system is fragile. What's the balanced call?",
+    options: [
+      { label: "Refactor the hot path the feature depends on, and ship the rest iteratively.", points: 3 },
+      { label: "Ship the feature and fix broken things when they break.", points: 0 },
+      { label: "Refactor everything before any feature work.", points: 1 },
+      { label: "Cancel the feature to protect code quality.", points: 0 },
+    ],
+  },
+  {
     id: "tech-8",
     aspect: "technology",
+    difficulty: "pro",
     prompt:
       "You're building an alert that should catch real user-facing outages without paging everyone on noise. Best foundation?",
     options: [
@@ -257,6 +346,7 @@ export const READINESS_QUESTIONS: ReadinessQuestion[] = [
   {
     id: "tech-9",
     aspect: "technology",
+    difficulty: "pro",
     prompt:
       "A new API lets any authenticated user read another user's private data due to a broken authorization check. Immediate action?",
     options: [
@@ -269,6 +359,7 @@ export const READINESS_QUESTIONS: ReadinessQuestion[] = [
   {
     id: "tech-10",
     aspect: "technology",
+    difficulty: "pro",
     prompt:
       "You must explain a risky architecture migration to skeptical engineers. What earns their confidence?",
     options: [
@@ -279,34 +370,39 @@ export const READINESS_QUESTIONS: ReadinessQuestion[] = [
     ],
   },
 
-  // --- Product ---
+  // =====================================================================
+  // PRODUCT — 2 basic, 4 intermediate, 6 pro
+  // =====================================================================
   {
-    id: "prod-1",
+    id: "prod-b1",
     aspect: "product",
+    difficulty: "basic",
     prompt:
-      "Three features are candidates: A (high reach, low effort, low confidence), B (low reach, high effort, high confidence), C (medium, medium, medium). Which prioritization approach is correct?",
+      "Which metric directly measures whether visitors complete a desired action (such as signing up or purchasing) on your site?",
     options: [
-      { label: "Score them on reach × impact ÷ effort, weighted by confidence, to compare apples to apples.", points: 3 },
-      { label: "Ship whatever the biggest customer asked for.", points: 0 },
-      { label: "Pick the cheapest one to bank a quick win.", points: 1 },
-      { label: "Ship all three in parallel to reduce risk.", points: 0 },
+      { label: "Conversion rate.", points: 3 },
+      { label: "Monthly churn.", points: 1 },
+      { label: "Server uptime.", points: 0 },
+      { label: "Number of features shipped.", points: 0 },
     ],
   },
   {
-    id: "prod-2",
+    id: "prod-b2",
     aspect: "product",
+    difficulty: "basic",
     prompt:
-      "Your product's goal is long-term sustainable growth. Which metric best captures it?",
+      "What is the primary purpose of an MVP?",
     options: [
-      { label: "A north-star metric tied to delivered value, like weekly active users completing the core action.", points: 3 },
-      { label: "Total registered accounts.", points: 1 },
-      { label: "Monthly revenue from existing customers.", points: 1 },
-      { label: "Number of features shipped.", points: 0 },
+      { label: "Test the riskiest assumption with the smallest useful slice.", points: 3 },
+      { label: "Ship every feature so customers are never disappointed.", points: 0 },
+      { label: "Build a polished marketing demo with no real flows.", points: 1 },
+      { label: "Deliver the complete long-term vision in one release.", points: 0 },
     ],
   },
   {
     id: "prod-3",
     aspect: "product",
+    difficulty: "intermediate",
     prompt:
       "An A/B test shows a 2% lift in conversion with p = 0.04 but only 400 users per variant. What do you do?",
     options: [
@@ -319,6 +415,7 @@ export const READINESS_QUESTIONS: ReadinessQuestion[] = [
   {
     id: "prod-4",
     aspect: "product",
+    difficulty: "intermediate",
     prompt:
       "You have two weeks of research budget to validate an unproven feature. What's the most reliable input?",
     options: [
@@ -331,6 +428,7 @@ export const READINESS_QUESTIONS: ReadinessQuestion[] = [
   {
     id: "prod-5",
     aspect: "product",
+    difficulty: "intermediate",
     prompt:
       "Activation converts strongly but weekly retention is flat. Where is the problem likely?",
     options: [
@@ -341,8 +439,48 @@ export const READINESS_QUESTIONS: ReadinessQuestion[] = [
     ],
   },
   {
+    id: "prod-9",
+    aspect: "product",
+    difficulty: "intermediate",
+    prompt:
+      "Signups are growing but 70% of new users never finish onboarding. Highest-leverage fix?",
+    options: [
+      { label: "Instrument the funnel to find the exact drop-off step, then simplify it.", points: 3 },
+      { label: "Add more signup fields to filter out low-intent users.", points: 0 },
+      { label: "Send more emails after signup.", points: 1 },
+      { label: "Reduce the price to encourage completion.", points: 1 },
+    ],
+  },
+  {
+    id: "prod-1",
+    aspect: "product",
+    difficulty: "pro",
+    prompt:
+      "Three features are candidates: A (high reach, low effort, low confidence), B (low reach, high effort, high confidence), C (medium, medium, medium). Which prioritization approach is correct?",
+    options: [
+      { label: "Score them on reach × impact ÷ effort, weighted by confidence, to compare apples to apples.", points: 3 },
+      { label: "Ship whatever the biggest customer asked for.", points: 0 },
+      { label: "Pick the cheapest one to bank a quick win.", points: 1 },
+      { label: "Ship all three in parallel to reduce risk.", points: 0 },
+    ],
+  },
+  {
+    id: "prod-2",
+    aspect: "product",
+    difficulty: "pro",
+    prompt:
+      "Your product's goal is long-term sustainable growth. Which metric best captures it?",
+    options: [
+      { label: "A north-star metric tied to delivered value, like weekly active users completing the core action.", points: 3 },
+      { label: "Total registered accounts.", points: 1 },
+      { label: "Monthly revenue from existing customers.", points: 1 },
+      { label: "Number of features shipped.", points: 0 },
+    ],
+  },
+  {
     id: "prod-6",
     aspect: "product",
+    difficulty: "pro",
     prompt:
       "You must choose between a big strategic bet (12 weeks) and several quick wins (3 weeks each). What's the right posture?",
     options: [
@@ -355,6 +493,7 @@ export const READINESS_QUESTIONS: ReadinessQuestion[] = [
   {
     id: "prod-7",
     aspect: "product",
+    difficulty: "pro",
     prompt:
       "A stakeholder asks for a dashboard of 'total visits'. Which metric would you counter-propose?",
     options: [
@@ -367,6 +506,7 @@ export const READINESS_QUESTIONS: ReadinessQuestion[] = [
   {
     id: "prod-8",
     aspect: "product",
+    difficulty: "pro",
     prompt:
       "For an MVP, which scope is the right one?",
     options: [
@@ -377,20 +517,9 @@ export const READINESS_QUESTIONS: ReadinessQuestion[] = [
     ],
   },
   {
-    id: "prod-9",
-    aspect: "product",
-    prompt:
-      "Signups are growing but 70% of new users never finish onboarding. Highest-leverage fix?",
-    options: [
-      { label: "Instrument the funnel to find the exact drop-off step, then simplify it.", points: 3 },
-      { label: "Add more signup fields to filter out low-intent users.", points: 0 },
-      { label: "Send more emails after signup.", points: 1 },
-      { label: "Reduce the price to encourage completion.", points: 1 },
-    ],
-  },
-  {
     id: "prod-10",
     aspect: "product",
+    difficulty: "pro",
     prompt:
       "Which set of signals most strongly indicates product-market fit?",
     options: [
@@ -415,6 +544,12 @@ const ZERO_ASPECTS: AspectScores = {
   technology: 0,
   product: 0,
 };
+
+export const QUESTIONS_PER_ASPECT = 12;
+
+export function questionsForAspect(aspect: ReadinessAspect) {
+  return READINESS_QUESTIONS.filter((q) => q.aspect === aspect);
+}
 
 export function scoreReadinessAnswers(
   answers: ReadinessAnswers

@@ -119,6 +119,24 @@ export async function signIn(
     return { status: "error", message: "Invalid email or password." };
   }
 
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (user) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("onboarding_completed")
+      .eq("id", user.id)
+      .maybeSingle();
+
+    revalidatePath("/", "layout");
+    if (profile?.onboarding_completed === true) {
+      redirect("/dashboard");
+    }
+    redirect("/onboarding");
+  }
+
   revalidatePath("/", "layout");
   redirect("/onboarding");
 }

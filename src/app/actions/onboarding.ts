@@ -13,11 +13,6 @@ export type OnboardingState = {
 const onboardingSchema = z.object({
   currentRole: z.string().min(1, { error: "Please select your current role." }),
   targetRole: z.string().min(1, { error: "Please select your target role." }),
-  timelineWeeks: z.coerce
-    .number()
-    .int()
-    .min(4, { error: "Timeline should be at least 4 weeks." })
-    .max(156, { error: "Timeline should be under 3 years." }),
   weeklyHours: z.coerce
     .number()
     .int()
@@ -42,7 +37,6 @@ export async function completeOnboarding(
   const parsed = onboardingSchema.safeParse({
     currentRole: formData.get("currentRole"),
     targetRole: formData.get("targetRole"),
-    timelineWeeks: formData.get("timelineWeeks"),
     weeklyHours: formData.get("weeklyHours"),
   });
 
@@ -67,7 +61,6 @@ export async function completeOnboarding(
     .update({
       current_work_role: parsed.data.currentRole,
       target_role: parsed.data.targetRole,
-      timeline_weeks: parsed.data.timelineWeeks,
       weekly_hours: parsed.data.weeklyHours,
       onboarding_completed: true,
       onboarding_completed_at: new Date().toISOString(),

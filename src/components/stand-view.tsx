@@ -33,7 +33,7 @@ export function StandView({
           </span>
           {stand.completedAt && (
             <p className="mt-3 text-xs text-zinc-600">
-              From the 30-question test ·{" "}
+              From the 36-question test ·{" "}
               {new Date(stand.completedAt).toLocaleDateString("en-IN", {
                 day: "numeric",
                 month: "short",

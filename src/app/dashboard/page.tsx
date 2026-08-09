@@ -1,19 +1,18 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { ClipboardList, FileText } from "lucide-react";
+import { ArrowRight, ClipboardList, FileText } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { AppShell } from "@/components/app-shell";
 import { ResumeUpload } from "@/components/resume-upload";
-import { ReadinessReportView } from "@/components/readiness-report";
-import { StandView } from "@/components/stand-view";
-import { getPublishedCompetencies, seedGraph } from "@tpmforge/core";
-import type { ResumeReportPayload } from "@/app/actions/resume";
+import { RadarChart } from "@/components/radar-chart";
 import { getLatestAnalysis } from "@/lib/analysis";
 import {
   getLatestReadinessTest,
   standFromRow,
+  aspectsToRadar,
 } from "@/lib/readiness";
+import { ASPECTS } from "@/lib/readiness-test";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -21,34 +20,11 @@ export const metadata: Metadata = {
 
 export const maxDuration = 60;
 
-function analysisToPayload(row: {
-  readiness_score: number | null;
-  radar_data: unknown;
-  gap_report: unknown;
-  model_used: string | null;
-  tokens_used: number | null;
-  file_name: string;
-  competency_scores: Record<string, unknown>;
-}): ResumeReportPayload {
-  const radar = (row.radar_data ?? {}) as ResumeReportPayload["radar"];
-  const gapReport = (row.gap_report ?? {}) as {
-    gaps?: ResumeReportPayload["gaps"];
-    nextSteps?: ResumeReportPayload["nextSteps"];
-  };
-  return {
-    readinessScore: row.readiness_score ?? 0,
-    radar,
-    gaps: gapReport.gaps ?? [],
-    nextSteps: gapReport.nextSteps ?? [],
-    competencyCount: getPublishedCompetencies(seedGraph).length,
-    scoredCount: Object.keys(row.competency_scores ?? {}).filter(
-      (key) =>
-        Object.keys((row.competency_scores ?? {})[key] ?? {}).length > 0
-    ).length,
-    model: row.model_used ?? "unknown",
-    tokensUsed: row.tokens_used ?? 0,
-    fileName: row.file_name,
-  };
+function aspectColor(score: number) {
+  if (score >= 75) return "bg-emerald-500";
+  if (score >= 60) return "bg-indigo-500";
+  if (score >= 40) return "bg-amber-500";
+  return "bg-rose-500";
 }
 
 export default async function DashboardPage() {
@@ -76,154 +52,180 @@ export default async function DashboardPage() {
 
   const profile = profileResult.data;
   const stand = testRow ? standFromRow(testRow) : null;
-
-  const strongest =
-    stand &&
-    (Object.entries(stand.aspects).sort((a, b) => b[1] - a[1])[0]?.[0] ?? "");
+  const radar = stand ? aspectsToRadar(stand.aspects) : null;
 
   return (
     <AppShell user={{ email: user.email ?? "" }}>
       <div className="mx-auto max-w-7xl px-6 py-10">
-        <div className="mb-10">
-          <p className="text-sm text-indigo-400">Dashboard</p>
+        <div className="mb-12">
+          <p className="text-sm text-indigo-400">Overview</p>
           <h1 className="mt-1 text-2xl font-bold tracking-tight text-zinc-50">
             Welcome back, {profile?.full_name || "forger"}
           </h1>
           <p className="mt-2 text-sm text-zinc-400">
             {profile?.target_role
-              ? `Your goal: ${profile.target_role} · ${profile.timeline_weeks ?? "—"} week plan · ${profile.weekly_hours ?? "—"} hrs/week`
+              ? `Your goal: ${profile.target_role} · ${profile.weekly_hours ?? "—"} hrs/week`
               : "Complete your setup to unlock your personalized roadmap."}
           </p>
         </div>
 
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-          <DashboardCard
-            label="TPM stand"
-            value={stand ? String(stand.overall) : "Pending"}
-            hint={
-              stand
-                ? "From the 30-question readiness test"
-                : "Take the readiness test to see it"
-            }
-          />
-          <DashboardCard
-            label="Strongest pillar"
-            value={
-              strongest
-                ? strongest.charAt(0).toUpperCase() + strongest.slice(1)
-                : "—"
-            }
-            hint={stand ? "Business · technology · product" : "Awaiting test"}
-          />
-          <DashboardCard
-            label="Next step"
-            value={!stand ? "TPM test" : "Resume analysis"}
-            hint={
-              !stand
-                ? "Measure your current stand first"
-                : "Score your resume for suggestions"
-            }
-          />
-        </div>
+        {/* ---------- Section 1: Know your current TPM stand (main) ---------- */}
+        <section className="rounded-2xl border border-indigo-500/30 bg-gradient-to-br from-indigo-500/10 via-zinc-900/40 to-zinc-900/40 p-8">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-indigo-600/20">
+                <ClipboardList className="h-6 w-6 text-indigo-300" />
+              </span>
+              <div>
+                <h2 className="text-xl font-bold tracking-tight text-zinc-50">
+                  Know your current TPM stand
+                </h2>
+                <p className="mt-1 text-sm text-zinc-400">
+                  {stand
+                    ? `Your stand from the 36-question test, last taken ${new Date(stand.completedAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}.`
+                    : "Answer 12 questions each on business, technology, and product — get your stand, strongest pillar, and focus areas."}
+                </p>
+              </div>
+            </div>
+            <Link
+              href="/dashboard/readiness"
+              className="inline-flex shrink-0 items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-600/25 transition hover:bg-indigo-500"
+            >
+              {stand ? "See stand details" : "Take the readiness test"}
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
 
-        {!stand ? (
-          <div className="mt-8">
-            <div className="flex flex-col items-start gap-4 rounded-2xl border border-indigo-500/30 bg-indigo-500/10 p-6 sm:flex-row sm:items-center sm:justify-between">
-              <div className="flex items-start gap-3">
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-indigo-600/20">
-                  <ClipboardList className="h-6 w-6 text-indigo-300" />
+          {!stand ? (
+            <div className="mt-6 rounded-xl border border-dashed border-indigo-500/30 bg-zinc-950/40 p-6">
+              <p className="text-sm text-zinc-400">
+                Measure your current stand first. Once you complete the test,
+                you&apos;ll see your score, competency graph, and suggested
+                focus areas here and on the{" "}
+                <Link
+                  href="/dashboard/readiness"
+                  className="font-medium text-indigo-300 underline decoration-indigo-500/40 underline-offset-2 hover:text-indigo-200"
+                >
+                  readiness page
+                </Link>
+                .
+              </p>
+            </div>
+          ) : (
+            <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,280px)_minmax(0,1fr)]">
+              <div className="rounded-2xl border border-zinc-800 bg-zinc-950/50 p-6 text-center">
+                <p className="text-xs font-medium uppercase tracking-wider text-zinc-500">
+                  Your TPM stand
+                </p>
+                <p className="mt-2 text-5xl font-bold text-zinc-50">
+                  {stand.overall}
+                  <span className="text-2xl text-zinc-500">/100</span>
+                </p>
+                <span className="mt-3 inline-flex items-center rounded-full border border-indigo-500/30 bg-indigo-500/10 px-3 py-1 text-xs font-medium text-indigo-300">
+                  {stand.label}
                 </span>
+                <Link
+                  href="/dashboard/readiness"
+                  className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-zinc-700 px-4 py-2.5 text-sm font-medium text-zinc-300 transition hover:border-zinc-500 hover:text-zinc-100"
+                >
+                  Full details &amp; focus areas
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+              </div>
+
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                <div className="rounded-2xl border border-zinc-800 bg-zinc-950/50 p-6">
+                  <p className="text-xs font-medium uppercase tracking-wider text-zinc-500">
+                    Competency graph
+                  </p>
+                  <div className="mx-auto mt-2 h-56 max-w-[220px]">
+                    <RadarChart data={radar!} />
+                  </div>
+                </div>
+                <div className="flex flex-col justify-center rounded-2xl border border-zinc-800 bg-zinc-950/50 p-6">
+                  <p className="text-xs font-medium uppercase tracking-wider text-zinc-500">
+                    Strength by pillar
+                  </p>
+                  <div className="mt-4 space-y-4">
+                    {ASPECTS.map((aspect) => {
+                      const score = stand.aspects[aspect.key];
+                      return (
+                        <div key={aspect.key}>
+                          <div className="flex items-center justify-between gap-3">
+                            <p className="text-sm text-zinc-300">
+                              {aspect.label}
+                            </p>
+                            <span className="text-xs font-medium text-zinc-500">
+                              {score}/100
+                            </span>
+                          </div>
+                          <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-zinc-800">
+                            <div
+                              className={`h-full rounded-full ${aspectColor(score)}`}
+                              style={{ width: `${score}%` }}
+                            />
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <Link
+                    href="/dashboard/readiness#test"
+                    className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-zinc-700 px-4 py-2.5 text-sm font-medium text-zinc-300 transition hover:border-zinc-500 hover:text-zinc-100"
+                  >
+                    Retake test
+                  </Link>
+                </div>
+              </div>
+            </div>
+          )}
+        </section>
+
+        {/* -------- Section 2: Resume analysis (biggest heading + upload) -------- */}
+        <section className="mt-16">
+          <div className="mb-6 flex items-center gap-3">
+            <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-600/20">
+              <FileText className="h-6 w-6 text-indigo-300" />
+            </span>
+            <div>
+              <h2 className="text-3xl font-bold tracking-tight text-zinc-50">
+                Resume analysis, scoring &amp; suggestions
+              </h2>
+              <p className="mt-1 text-sm text-zinc-400">
+                Upload your resume to score it against the TPM competency
+                graph — then open the full analysis with gaps and suggestions.
+              </p>
+            </div>
+          </div>
+
+          {latest && (
+            <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-zinc-800 bg-zinc-900/40 p-5">
+              <div className="flex items-center gap-4">
+                <p className="text-4xl font-bold text-zinc-50">
+                  {latest.readiness_score ?? 0}
+                  <span className="text-lg text-zinc-500">/100</span>
+                </p>
                 <div>
-                  <h3 className="text-base font-semibold text-zinc-100">
-                    Know your current TPM stand
-                  </h3>
-                  <p className="mt-1 text-sm text-zinc-400">
-                    Answer 10 questions on each of business, technology, and
-                    product — get your stand, strongest pillar, and focus
-                    areas in under 10 minutes.
+                  <p className="text-sm font-medium text-zinc-200">
+                    {latest.file_name}
+                  </p>
+                  <p className="text-xs text-zinc-500">
+                    Resume match score · analyzed with the competency graph
                   </p>
                 </div>
               </div>
               <Link
-                href="/dashboard/readiness#test"
-                className="inline-flex shrink-0 items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-600/25 transition hover:bg-indigo-500"
+                href="/dashboard/resume"
+                className="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-600/25 transition hover:bg-indigo-500"
               >
-                Take the readiness test
+                View full analysis <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
-          </div>
-        ) : (
-          <div className="mt-8">
-            <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-              <div>
-                <h3 className="text-sm font-semibold text-zinc-100">
-                  Your current stand
-                </h3>
-                <p className="text-xs text-zinc-500">
-                  Based on your 30-question readiness test.
-                </p>
-              </div>
-              <Link
-                href="/dashboard/readiness#test"
-                className="inline-flex items-center gap-2 rounded-lg border border-zinc-700 px-3 py-2 text-xs font-medium text-zinc-300 transition hover:border-zinc-500 hover:text-zinc-100"
-              >
-                Retake test
-              </Link>
-            </div>
-            <StandView stand={stand} />
-          </div>
-        )}
-
-        <div className="mt-12">
-          <div className="mb-4 flex items-center gap-3">
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-600/20">
-              <FileText className="h-4 w-4 text-indigo-300" />
-            </span>
-            <div>
-              <h3 className="text-sm font-semibold text-zinc-100">
-                Resume analysis, scoring &amp; suggestions
-              </h3>
-              <p className="text-xs text-zinc-500">
-                Upload your resume for a separate match score, competency gap
-                analysis, and learning suggestions.
-              </p>
-            </div>
-          </div>
-          {latest ? (
-            <>
-              <ReadinessReportView report={analysisToPayload(latest)} />
-              <div className="mt-8">
-                <ResumeUpload />
-                <p className="mt-6 text-center text-xs text-zinc-600">
-                  Re-upload a newer resume to refresh your analysis.
-                </p>
-              </div>
-            </>
-          ) : (
-            <ResumeUpload />
           )}
-        </div>
+
+          <ResumeUpload redirectTo="/dashboard/resume" />
+        </section>
       </div>
     </AppShell>
-  );
-}
-
-function DashboardCard({
-  label,
-  value,
-  hint,
-}: {
-  label: string;
-  value: string;
-  hint: string;
-}) {
-  return (
-    <div className="rounded-2xl border border-zinc-800 bg-zinc-900/40 p-6">
-      <p className="text-xs font-medium uppercase tracking-wider text-zinc-500">
-        {label}
-      </p>
-      <p className="mt-2 text-3xl font-bold text-zinc-50">{value}</p>
-      <p className="mt-2 text-xs text-zinc-500">{hint}</p>
-    </div>
   );
 }

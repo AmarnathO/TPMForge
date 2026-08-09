@@ -112,7 +112,7 @@ export default async function RadarPage() {
               No radar data yet
             </h3>
             <p className="mx-auto mt-2 max-w-md text-sm text-zinc-500">
-              Take the 30-question readiness test or upload your resume to build
+              Take the 36-question readiness test or upload your resume to build
               your radar.
             </p>
             <Link
@@ -122,7 +122,7 @@ export default async function RadarPage() {
               <ClipboardList className="h-4 w-4" /> Take the readiness test
             </Link>
             <div className="mx-auto mt-8 max-w-lg">
-              <ResumeUpload />
+              <ResumeUpload redirectTo="/dashboard/resume" />
             </div>
           </div>
         ) : (
@@ -182,7 +182,7 @@ export default async function RadarPage() {
                       Your radar is derived from your readiness test. Upload a
                       resume for a separate competency-based radar.
                       <div className="mt-4">
-                        <ResumeUpload />
+                        <ResumeUpload redirectTo="/dashboard/resume" />
                       </div>
                     </div>
                   </>
