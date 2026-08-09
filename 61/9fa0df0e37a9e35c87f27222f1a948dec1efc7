@@ -1,0 +1,54 @@
+src/lib/product-assessments.ts
+  s_9b7382b5b7b0d1::t_bfb19778f51e31 10,20
+  s_9b7382b5b7b0d1::t_cd72e9eab63834 119,121-122
+  s_9b7382b5b7b0d1::t_f6493fe8847823 39,46-85
+packages/core/src/scoring.ts
+  s_9b7382b5b7b0d1::t_a5f02225879b18 17-34,40-53
+  s_9b7382b5b7b0d1::t_87494d2194fe6b 54
+supabase/migrations/0009_product_category_scores.sql
+  s_9b7382b5b7b0d1::t_6e2de8ba531484 1-7
+src/app/actions/product-agent.ts
+  s_9b7382b5b7b0d1::t_0e4908c4267e47 164-168,173,176
+  s_9b7382b5b7b0d1::t_8a1c705f94f631 15
+  s_9b7382b5b7b0d1::t_e1ed460c6efa77 80-81,86
+  s_9b7382b5b7b0d1::t_848d251aab2dfa 189,202-212
+src/lib/product-agent.ts
+  s_9b7382b5b7b0d1::t_cd823639064147 64
+  s_9b7382b5b7b0d1::t_c244c7b7a2e404 334
+  s_9b7382b5b7b0d1::t_b7675e83c5f063 357
+  s_9b7382b5b7b0d1::t_c1d1b06e6878c9 88,106,124,142,160,178,196,207,218,229
+  s_9b7382b5b7b0d1::t_1adce9df474e97 1-6
+  s_9b7382b5b7b0d1::t_1f4032ef468431 268-315
+src/components/product-agent.tsx
+  s_9b7382b5b7b0d1::t_ce42ace22dcf3b 176-215
+  s_9b7382b5b7b0d1::t_8b2a08bbdf1a68 89-114
+  s_9b7382b5b7b0d1::t_2f5a8cbe22bc47 115
+packages/core/src/llm/resume-coach.ts
+  s_9b7382b5b7b0d1::t_4d784954471bd6 133-158,163-164
+  s_9b7382b5b7b0d1::t_c0325be7459c4f 3-8
+  s_9b7382b5b7b0d1::t_0b65d7d802035d 24
+  s_9b7382b5b7b0d1::t_0a0d4df9973f7d 56-57,59
+src/app/actions/resume.ts
+  s_9b7382b5b7b0d1::t_14b6e5e7356e7b 155
+src/components/readiness-report.tsx
+  s_9b7382b5b7b0d1::t_f618467ba44145 52-53
+  s_9b7382b5b7b0d1::t_97dd12b9998916 87-96,126-137
+  s_9b7382b5b7b0d1::t_6508553439d116 190-192,204-244
+  s_9b7382b5b7b0d1::t_e288ffe5fb6c0c 245
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "619fa0df0e37a9e35c87f27222f1a948dec1efc7",
+  "prompts": {},
+  "sessions": {
+    "s_9b7382b5b7b0d1": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_0281697f1ffennuLtHOO7dvmcF",
+        "model": "deepseek-v4-flash-free"
+      },
+      "human_author": "Amarnath Ojha <amarnathojha071@gmail.com>"
+    }
+  }
+}
