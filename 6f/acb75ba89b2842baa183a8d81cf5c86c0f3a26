@@ -1,0 +1,42 @@
+packages/core/src/llm/resume-coach.ts
+  s_9b7382b5b7b0d1::t_a379306fcf3b82 1-155
+src/app/actions/resume.ts
+  s_9b7382b5b7b0d1::t_98415e5b7a4710 12,15
+  s_9b7382b5b7b0d1::t_d70327d56509b4 41
+  s_9b7382b5b7b0d1::t_67ee2eccf67696 134-173,184,196
+src/app/dashboard/resume/page.tsx
+  s_9b7382b5b7b0d1::t_6b6b3f2b799bc4 34-52,74-79,84
+  s_9b7382b5b7b0d1::t_eb7f6a749bd06b 4
+  s_9b7382b5b7b0d1::t_fe42d309f3bd6b 15
+packages/core/src/llm/models.ts
+  s_9b7382b5b7b0d1::t_a2af3039d89925 64-68,70
+src/components/readiness-report.tsx
+  s_9b7382b5b7b0d1::t_b7f2d22bda194a 10-44,51,137-286
+  s_9b7382b5b7b0d1::t_524b02336b0315 287
+src/components/resume-upload.tsx
+  s_9b7382b5b7b0d1::t_112a73361e041f 48
+packages/core/src/llm/index.ts
+  s_9b7382b5b7b0d1::t_cf60d209401765 6
+packages/core/src/llm/evaluate.ts
+  s_9b7382b5b7b0d1::t_437335ff10fe79 117-119,122
+src/lib/product-agent.ts
+  s_9b7382b5b7b0d1::t_375dbac2ed1ca0 292-294,296
+src/lib/analysis.ts
+  s_9b7382b5b7b0d1::t_08f2655f3cd425 38
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "6facb75ba89b2842baa183a8d81cf5c86c0f3a26",
+  "prompts": {},
+  "sessions": {
+    "s_9b7382b5b7b0d1": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_0281697f1ffennuLtHOO7dvmcF",
+        "model": "deepseek-v4-flash-free"
+      },
+      "human_author": "Amarnath Ojha <amarnathojha071@gmail.com>"
+    }
+  }
+}
