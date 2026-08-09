@@ -61,10 +61,13 @@ export const MODELS: Record<ModelRole, ModelConfig> = {
     temperature: 0,
   },
   product_agent: {
-    id: "openai/gpt-oss-20b:free",
-    fallback: ["google/gemma-4-31b-it:free", "openrouter/free"],
+    id: "nvidia/nemotron-3-super-120b-a12b:free",
+    fallback: [
+      "nvidia/nemotron-3-ultra-550b-a55b:free",
+      "openrouter/free",
+    ],
     purpose: "Product mentor: evaluate descriptive PM answers → dimensions + roadmap",
-    maxTokens: 2000,
+    maxTokens: 1800,
     jsonMode: true,
     temperature: 0.2,
   },

@@ -114,11 +114,12 @@ export interface ResumeMappingResult {
 }
 
 const RESUME_PROMPT = [
-  "You are a TPM readiness analyst. Given a resume and a list of competency IDs, map the resume evidence to each competency's six dimensions (knowledge, understanding, application, communication, decision_making, execution), each 0-100.",
-  "Anchor to explicit resume evidence. Unknown or unaddressed competencies score 0 for every dimension. Never inflate.",
+  "You are a TPM readiness analyst. Given a resume and a list of competency IDs, map the resume evidence to each competency's six dimensions (knowledge, understanding, application, communication, decision_making, execution), each an integer 0-100.",
+  "Use the full resume as evidence. For each competency, estimate the candidate's demonstrated level in each dimension. Score generously where the resume shows related experience, even if the terminology differs. Only score 0 when the resume gives NO signal at all. Give concrete nonzero scores for most competencies of a senior program leader.",
+  "Example entry (do NOT copy these values): {\"knowledge\":72,\"understanding\":65,\"application\":58,\"communication\":70,\"decision_making\":60,\"execution\":66}",
   "",
   "Respond with ONLY JSON matching this shape:",
-  `{"scores": {"<competency_id>": {"knowledge": 0, "understanding": 0, "application": 0, "communication": 0, "decision_making": 0, "execution": 0}}}`,
+  `{"scores": {"<competency_id>": {"knowledge": 62, "understanding": 55, "application": 60, "communication": 58, "decision_making": 52, "execution": 57}}}`,
   "",
   "Include every competency ID supplied. Do not add IDs that were not supplied.",
 ].join("\n");

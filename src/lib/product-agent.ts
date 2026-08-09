@@ -288,11 +288,12 @@ export const PRODUCT_AGENT_SYSTEM_PROMPT = [
   "",
   "Rules:",
   "- Be honest and specific. Never inflate scores. A two-line generic answer scores low.",
-  "- Score the six dimension scores in 'dimensions' based on all evidence in the answers; if evidence for a dimension is thin, score it conservatively.",
   "- Feedback: 2-3 sentences per answer. Strengths and gaps: 1-2 short bullets each, defensible from the text.",
-  "- Produce 5-7 personalized roadmap items for product understanding, ordered from highest impact to lowest. Each item: topic (a product skill), why (tie it to a specific gap found), exercise (a concrete 1-2 day practice), duration.",
+  "- Score the six dimension scores in 'dimensions' based on all evidence in the answers; if evidence for a dimension is thin, score it conservatively.",
+  "- You will receive EXACTLY 4 descriptive answers with ids pm-7, pm-8, pm-9, pm-10. The 'answers' array MUST contain one entry for EACH of the 4 ids — never fewer, never more.",
+  "- Produce EXACTLY 5 roadmap items for product understanding, ordered highest impact first. Each item: topic (a product skill), why (tie it to a specific gap found), exercise (a concrete 1-2 day practice), duration.",
   "- Respond with ONLY JSON, no markdown, no code fences, matching exactly this shape:",
-  `{"answers":[{"id":"<question id>","score":68,"feedback":"<2-3 sentences>","strengths":["<bullet>"],"gaps":["<bullet>"]}],"dimensions":{"discovery":65,"strategy":70,"prioritization":55,"metrics":60,"execution":66,"communication":72},"summary":"<2-3 sentence mentor verdict: biggest strength and one critical gap>","roadmap":[{"topic":"<skill>","why":"<ties to a gap>","exercise":"<concrete practice>","duration":"1 week"}]}`,
+  `{"answers":[{"id":"pm-7","score":68,"feedback":"<2-3 sentences>","strengths":["<bullet>"],"gaps":["<bullet>"]}],"dimensions":{"discovery":65,"strategy":70,"prioritization":55,"metrics":60,"execution":66,"communication":72},"summary":"<2-3 sentence mentor verdict: biggest strength and one critical gap>","roadmap":[{"topic":"<skill>","why":"<ties to a gap>","exercise":"<concrete practice>","duration":"1 week"}]}`,
 ].join("\n");
 
 export function buildProductAgentPrompt(

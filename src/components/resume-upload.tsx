@@ -45,6 +45,7 @@ export function ResumeUpload({ redirectTo }: { redirectTo?: string }) {
   useEffect(() => {
     if (state.status === "success" && redirectTo) {
       router.push(redirectTo);
+      router.refresh();
     }
   }, [state.status, redirectTo, router]);
 

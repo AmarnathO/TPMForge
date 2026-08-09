@@ -35,6 +35,7 @@ export function analysisToPayload(row: AnalysisRow): ResumeReportPayload {
     model: row.model_used ?? "unknown",
     tokensUsed: row.tokens_used ?? 0,
     fileName: row.file_name,
+    coach: (gapReport as { coach?: ResumeReportPayload["coach"] }).coach ?? null,
   };
 }
 

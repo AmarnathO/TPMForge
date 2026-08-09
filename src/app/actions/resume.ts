@@ -9,8 +9,10 @@ import {
   getLearningOrder,
   getPublishedCompetencies,
   mapResumeToScores,
+  runResumeCoach,
   seedGraph,
   type DimensionScores,
+  type ResumeCoachReport,
 } from "@tpmforge/core";
 
 export type ResumeState = {
@@ -36,6 +38,7 @@ export interface ResumeReportPayload {
   model: string;
   tokensUsed: number;
   fileName: string;
+  coach: ResumeCoachReport | null;
 }
 
 export async function analyzeResume(
@@ -128,6 +131,46 @@ export async function analyzeResume(
     .slice(0, 6)
     .map((c) => ({ id: c.id, title: c.title }));
 
+  const profileResult = await supabase
+    .from("profiles")
+    .select("current_role, target_role")
+    .eq("id", user.id)
+    .single();
+  const profile = profileResult.data as
+    | { current_role?: string | null; target_role?: string | null }
+    | null;
+
+  let coach: ResumeCoachReport | null = null;
+  try {
+    const coachResult = await runResumeCoach(client, {
+      resumeText: text,
+      currentRole: profile?.current_role ?? undefined,
+      targetRole: profile?.target_role ?? undefined,
+      competencyScores: scores,
+    });
+    coach = {
+      profile: coachResult.profile,
+      executiveAssessment: coachResult.executiveAssessment,
+      readinessScore: coachResult.readinessScore,
+      strengths: coachResult.strengths,
+      criticalGaps: coachResult.criticalGaps,
+      resumeIssues: coachResult.resumeIssues,
+      bulletImprovements: coachResult.bulletImprovements,
+      missingEvidence: coachResult.missingEvidence,
+      technicalGaps: coachResult.technicalGaps,
+      impactGaps: coachResult.impactGaps,
+      portfolioRecommendations: coachResult.portfolioRecommendations,
+      certificationRecommendations: coachResult.certificationRecommendations,
+      linkedinRecommendations: coachResult.linkedinRecommendations,
+      contentStrategy: coachResult.contentStrategy,
+      roadmap: coachResult.roadmap,
+      plan306090: coachResult.plan306090,
+      interviewReadiness: coachResult.interviewReadiness,
+    };
+  } catch (err) {
+    console.error("[resume] coach evaluation failed:", err);
+  }
+
   const payload: ResumeReportPayload = {
     readinessScore: report.readinessScore,
     radar: report.radar,
@@ -138,6 +181,7 @@ export async function analyzeResume(
     model: mapped.model,
     tokensUsed: mapped.tokensUsed,
     fileName: file.name,
+    coach,
   };
 
   const { error: insertError } = await supabase.from("resume_analyses").insert({
@@ -149,7 +193,7 @@ export async function analyzeResume(
     competency_scores: scores,
     readiness_score: report.readinessScore,
     radar_data: report.radar,
-    gap_report: { gaps: gapList, nextSteps },
+    gap_report: { gaps: gapList, nextSteps, coach },
     model_used: mapped.model,
     tokens_used: mapped.tokensUsed,
     status: "completed",

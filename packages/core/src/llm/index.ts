@@ -3,3 +3,4 @@ export * from "./env";
 export * from "./openrouter";
 export * from "./evaluate";
 export * from "./practice";
+export * from "./resume-coach";
