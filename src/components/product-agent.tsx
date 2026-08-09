@@ -10,11 +10,14 @@ import {
   CheckCircle2,
   AlertTriangle,
   RotateCcw,
+  Gauge,
+  GitBranch,
 } from "lucide-react";
 import {
   submitProductAssessment,
   type ProductAgentState,
 } from "@/app/actions/product-agent";
+import { MembershipPaywall } from "@/components/membership-paywall";
 import {
   PRODUCT_QUESTIONS,
   PRODUCT_DIMENSIONS,
@@ -52,8 +55,12 @@ function scoreColor(score: number) {
 
 export function ProductAgent({
   initial,
+  subscribed,
+  email,
 }: {
   initial: ProductAgentResult | null;
+  subscribed: boolean;
+  email: string;
 }) {
   const [state, formAction, pending] = useActionState(
     submitProductAssessment,
@@ -113,6 +120,65 @@ const CATEGORY_META: {
 ];
 
 const renderResult = (r: ProductAgentResult) => {
+    if (!subscribed) {
+      return (
+        <div className="space-y-6">
+          <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-violet-500/30 bg-violet-500/5 p-5">
+            <div className="flex items-center gap-3">
+              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-violet-600/20">
+                <CheckCircle2 className="h-5 w-5 text-violet-300" />
+              </span>
+              <div>
+                <p className="text-sm font-semibold text-zinc-100">
+                  Assessment saved
+                </p>
+                <p className="text-xs text-zinc-500">
+                  Your Product Mentor assessment is stored. The full report
+                  unlocks with a membership.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <MembershipPaywall
+            email={email}
+            eyebrow="Members-only"
+            title="Your Product Mentor report is ready"
+            description="Your assessment is saved. The full report — 70/20/10 score breakdown, right-or-wrong review of every question, written answer feedback, and your personalized product roadmap — unlocks with a TPMForge membership."
+            highlights={[
+              {
+                icon: Gauge,
+                title: "70/20/10 breakdown",
+                text: "Your metrics, product problem, and scenario scores with their exact weighting.",
+              },
+              {
+                icon: CheckCircle2,
+                title: "Right-or-wrong review",
+                text: "Every multiple-choice question — your answer, the correct one, and why.",
+              },
+              {
+                icon: GitBranch,
+                title: "Personalized roadmap",
+                text: "A product-understanding roadmap built from your exact gaps.",
+              },
+            ]}
+          />
+
+          <button
+            type="button"
+            onClick={() => {
+              setLocalView("intro");
+              setAnswers({});
+              setQIndex(0);
+            }}
+            className="inline-flex items-center gap-2 rounded-xl border border-zinc-700 px-4 py-2.5 text-sm font-medium text-zinc-300 transition hover:border-zinc-500 hover:text-zinc-100"
+          >
+            <RotateCcw className="h-4 w-4" /> Retake assessment
+          </button>
+        </div>
+      );
+    }
+
     const dimensions = PRODUCT_DIMENSIONS.filter(
       (d) => typeof r.dimensionScores?.[d.key] === "number"
     );

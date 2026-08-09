@@ -7,6 +7,7 @@ import {
   getLatestProductAssessment,
   productAssessmentFromRow,
 } from "@/lib/product-assessments";
+import { getSubscription, isSubscriptionActive } from "@/lib/subscription";
 
 export const metadata: Metadata = {
   title: "Product Mentor",
@@ -24,11 +25,15 @@ export default async function ProductAgentPage() {
     redirect("/login");
   }
 
-  const row = await getLatestProductAssessment(supabase, user.id);
+  const [row, sub] = await Promise.all([
+    getLatestProductAssessment(supabase, user.id),
+    getSubscription(supabase, user.id),
+  ]);
   const initial = row ? productAssessmentFromRow(row) : null;
+  const email = user.email ?? "";
 
   return (
-    <AppShell user={{ email: user.email ?? "" }}>
+    <AppShell user={{ email }}>
       <div className="mx-auto max-w-5xl px-6 py-10">
         <div className="mb-10">
           <p className="text-sm text-violet-400">Product understanding</p>
@@ -41,7 +46,11 @@ export default async function ProductAgentPage() {
             personalized learning roadmap.
           </p>
         </div>
-        <ProductAgent initial={initial} />
+        <ProductAgent
+          initial={initial}
+          subscribed={isSubscriptionActive(sub)}
+          email={email}
+        />
       </div>
     </AppShell>
   );
