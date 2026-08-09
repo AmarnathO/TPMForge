@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   title: "Product Mentor",
 };
 
-export const maxDuration = 60;
+export const maxDuration = 300;
 
 export default async function ProductAgentPage() {
   const supabase = await createClient();

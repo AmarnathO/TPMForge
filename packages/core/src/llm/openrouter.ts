@@ -13,6 +13,7 @@ export interface CompletionParams {
   temperature?: number;
   jsonMode?: boolean;
   fallback?: string[];
+  timeoutMs?: number;
 }
 
 export interface CompletionResult {
@@ -131,17 +132,37 @@ export class OpenRouterClient {
 
     let response: Response;
     try {
-      response = await this.fetchImpl(`${this.env.baseUrl}/chat/completions`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${this.env.apiKey}`,
-          "Content-Type": "application/json",
-          "HTTP-Referer": this.env.siteUrl,
-          "X-Title": this.env.siteName,
-        },
-        body: JSON.stringify(body),
-      });
+      const controller =
+        typeof params.timeoutMs === "number" ? new AbortController() : null;
+      const timer =
+        controller && typeof params.timeoutMs === "number"
+          ? setTimeout(() => controller.abort(), params.timeoutMs)
+          : null;
+      try {
+        response = await this.fetchImpl(`${this.env.baseUrl}/chat/completions`, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${this.env.apiKey}`,
+            "Content-Type": "application/json",
+            "HTTP-Referer": this.env.siteUrl,
+            "X-Title": this.env.siteName,
+          },
+          body: JSON.stringify(body),
+          signal: controller?.signal,
+        });
+      } finally {
+        if (timer) clearTimeout(timer);
+      }
     } catch (err) {
+      const aborted =
+        err instanceof Error && err.name === "AbortError";
+      if (aborted) {
+        throw new OpenRouterError(
+          `Timed out after ${params.timeoutMs}ms calling ${model}`,
+          504,
+          model
+        );
+      }
       throw new OpenRouterError(
         `Network error calling ${model}: ${(err as Error).message}`,
         undefined,

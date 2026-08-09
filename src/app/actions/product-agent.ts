@@ -109,6 +109,7 @@ export async function submitProductAssessment(
       maxTokens: 2400,
       temperature: 0.2,
       jsonMode: true,
+      timeoutMs: 110_000,
     });
 
     const parsed = parseJsonContent(completion.content) ?? {};
