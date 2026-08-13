@@ -16,6 +16,7 @@ import {
   LineChart,
   CheckCircle2,
   Mail,
+  Phone,
 } from "lucide-react";
 import { Reveal } from "@/components/reveal";
 import { Logo } from "@/components/logo";
@@ -514,10 +515,24 @@ export default function Home() {
                   programs for engineering and product orgs. Reach out for a
                   tailored program for your team.
                 </p>
+                <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-zinc-300">
+                  <a
+                    href="tel:+918826178866"
+                    className="inline-flex items-center gap-2 transition hover:text-indigo-300"
+                  >
+                    <Phone className="h-4 w-4 text-indigo-400" /> +91 88261 78666
+                  </a>
+                  <a
+                    href="mailto:Amarnath.ojha1991@gmail.com?subject=Corporate%20training%20enquiry"
+                    className="inline-flex items-center gap-2 transition hover:text-indigo-300"
+                  >
+                    <Mail className="h-4 w-4 text-indigo-400" /> Amarnath.ojha1991@gmail.com
+                  </a>
+                </div>
               </div>
             </div>
             <a
-              href="mailto:hello@tpmforge.app?subject=Corporate%20training%20enquiry"
+              href="mailto:Amarnath.ojha1991@gmail.com?subject=Corporate%20training%20enquiry"
               className="inline-flex shrink-0 items-center gap-2 rounded-full bg-indigo-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-600/25 transition hover:bg-indigo-500"
             >
               Talk to us about training <ArrowRight className="h-4 w-4" />
