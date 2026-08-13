@@ -724,7 +724,7 @@ function RadarVisual() {
         </div>
       </div>
 
-      <div className="animate-float-slow absolute -left-6 bottom-10 rounded-2xl border border-white/10 bg-zinc-900/90 px-4 py-3 shadow-xl backdrop-blur">
+      <div className="animate-float-slow absolute -left-6 -bottom-12 rounded-2xl border border-white/10 bg-zinc-900/90 px-4 py-3 shadow-xl backdrop-blur">
         <p className="text-xs text-zinc-500">Roadmap</p>
         <p className="mt-1 text-sm font-semibold text-zinc-100">
           Day 9 of 14 · API design
