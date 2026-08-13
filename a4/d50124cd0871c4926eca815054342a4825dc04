@@ -1,0 +1,47 @@
+src/components/sessions-panel.tsx
+  s_9b7382b5b7b0d1::t_55e40f50fc8f38 1-54
+src/components/product-agent.tsx
+  s_9b7382b5b7b0d1::t_a9e48a314f2177 61,66
+  s_9b7382b5b7b0d1::t_ab074a47f451ce 21
+  s_9b7382b5b7b0d1::t_3c09f7d24706d4 220-221
+src/app/dashboard/product-agent/page.tsx
+  s_9b7382b5b7b0d1::t_4e00a7c39e7bb4 53
+supabase/migrations/0010_subscription_plan_onetime.sql
+  s_9b7382b5b7b0d1::t_19bbfb658f1329 1-8
+src/app/dashboard/roadmap/page.tsx
+  s_9b7382b5b7b0d1::t_a85434d894c517 127-128
+  s_9b7382b5b7b0d1::t_e493767251f1a0 21
+src/app/dashboard/resume/page.tsx
+  s_9b7382b5b7b0d1::t_2dfaf138242333 10
+  s_9b7382b5b7b0d1::t_7fe7e8bce3d62e 126-128
+src/components/subscribe-card.tsx
+  s_9b7382b5b7b0d1::t_de72e552004f8d 33-34,36,39-42
+src/components/membership-paywall.tsx
+  s_9b7382b5b7b0d1::t_ca3a4abf2cd5bb 60
+src/app/actions/billing.ts
+  s_9b7382b5b7b0d1::t_2386c1476f8050 6,12-13,16-17,19-20,22-24
+  s_9b7382b5b7b0d1::t_5eefcad9621788 149-152,173-176
+src/components/roadmap-paywall.tsx
+  s_9b7382b5b7b0d1::t_78bd9f97d5d4ee 63
+src/lib/subscription.ts
+  s_9b7382b5b7b0d1::t_03ef099123b0a9 5
+src/app/page.tsx
+  s_9b7382b5b7b0d1::t_db5c5aeb108d63 415-416,425,429-432,436-439,451,467,470,477,480-483,495
+  s_9b7382b5b7b0d1::t_5166e0d8311142 501-526
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "a4d50124cd0871c4926eca815054342a4825dc04",
+  "prompts": {},
+  "sessions": {
+    "s_9b7382b5b7b0d1": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_0281697f1ffennuLtHOO7dvmcF",
+        "model": "deepseek-v4-flash-free"
+      },
+      "human_author": "Amarnath Ojha <amarnathojha071@gmail.com>"
+    }
+  }
+}
