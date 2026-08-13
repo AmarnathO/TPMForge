@@ -18,6 +18,7 @@ import {
 import { createClient } from "@/lib/supabase/server";
 import { AppShell } from "@/components/app-shell";
 import { RoadmapPaywall } from "@/components/roadmap-paywall";
+import { SessionsPanel } from "@/components/sessions-panel";
 import { getLatestAnalysis } from "@/lib/analysis";
 import { getSubscription, isSubscriptionActive } from "@/lib/subscription";
 
@@ -122,6 +123,8 @@ export default async function RoadmapPage() {
             </p>
           )}
         </div>
+
+        <SessionsPanel plan={subscription?.plan ?? null} email={user.email ?? ""} />
 
         {!latest ? (
           <div className="rounded-2xl border border-dashed border-zinc-700 bg-zinc-900/40 p-10 text-center">

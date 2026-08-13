@@ -3,25 +3,25 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { createClient } from "@/lib/supabase/server";
 
-export type Plan = "monthly" | "annual";
+export type Plan = "one-time" | "monthly";
 
 const PLANS: Record<
   Plan,
   { label: string; priceRupees: number; amountPaise: number; periodLabel: string; note: string }
 > = {
-  monthly: {
-    label: "Monthly",
+  "one-time": {
+    label: "One-time",
     priceRupees: 2000,
     amountPaise: 200000,
-    periodLabel: "billed monthly",
-    note: "Flexible. Cancel anytime.",
+    periodLabel: "one-time payment",
+    note: "1 resume analysis · 1 assessment · 1 mock interview scheduled within a week.",
   },
-  annual: {
-    label: "Annual",
+  monthly: {
+    label: "Monthly",
     priceRupees: 1600,
-    amountPaise: 1920000,
-    periodLabel: "₹19,200 billed annually",
-    note: "Save 20% — that's ₹1,600/mo.",
+    amountPaise: 160000,
+    periodLabel: "billed monthly",
+    note: "Regular resume analysis & assessments · 2 × 1-hr sessions with your mentor every month.",
   },
 };
 
@@ -145,9 +145,11 @@ export async function verifyRazorpayPayment(
   }
 
   const planConfig = PLANS[plan];
-  const days = plan === "annual" ? 365 : 30;
   const now = new Date();
-  const endsAt = new Date(now.getTime() + days * 24 * 60 * 60 * 1000).toISOString();
+  const endsAt =
+    plan === "monthly"
+      ? new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000).toISOString()
+      : null;
 
   const { error } = await supabase.from("subscriptions").insert({
     user_id: user.id,
@@ -168,6 +170,9 @@ export async function verifyRazorpayPayment(
 
   return {
     success: true,
-    message: "Payment successful. Your roadmap is unlocked!",
+    message:
+      plan === "one-time"
+        ? "Payment successful. Your reports, roadmap, and mock interview are unlocked!"
+        : "Payment successful. Your membership and monthly sessions are unlocked!",
   };
 }

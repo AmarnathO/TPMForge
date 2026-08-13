@@ -30,16 +30,16 @@ declare global {
 
 const PLANS: { id: Plan; label: string; price: number; note: string; featured?: boolean }[] = [
   {
-    id: "monthly",
-    label: "Monthly",
+    id: "one-time",
+    label: "One-time",
     price: 2000,
-    note: "₹2,000/mo · flexible, cancel anytime",
+    note: "₹2,000 once · 1 resume analysis, 1 assessment, and 1 mock interview scheduled within a week",
   },
   {
-    id: "annual",
-    label: "Annual",
-    price: 19200,
-    note: "₹19,200/yr · save 20% (₹1,600/mo)",
+    id: "monthly",
+    label: "Monthly",
+    price: 1600,
+    note: "₹1,600/mo · regular resume analysis & assessments, plus 2 × 1-hour sessions with your mentor every month",
     featured: true,
   },
 ];

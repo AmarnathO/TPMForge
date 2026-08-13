@@ -18,6 +18,7 @@ import {
   type ProductAgentState,
 } from "@/app/actions/product-agent";
 import { MembershipPaywall } from "@/components/membership-paywall";
+import { SessionsPanel } from "@/components/sessions-panel";
 import {
   PRODUCT_QUESTIONS,
   PRODUCT_DIMENSIONS,
@@ -57,10 +58,12 @@ export function ProductAgent({
   initial,
   subscribed,
   email,
+  plan,
 }: {
   initial: ProductAgentResult | null;
   subscribed: boolean;
   email: string;
+  plan: string | null;
 }) {
   const [state, formAction, pending] = useActionState(
     submitProductAssessment,
@@ -213,6 +216,8 @@ const renderResult = (r: ProductAgentResult) => {
             </p>
           </div>
         </div>
+
+        <SessionsPanel plan={plan} email={email} />
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="rounded-2xl border border-zinc-800 bg-zinc-900/40 p-5">

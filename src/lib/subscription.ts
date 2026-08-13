@@ -2,7 +2,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 
 export type SubscriptionRow = {
   id: string;
-  plan: "monthly" | "annual";
+  plan: "monthly" | "annual" | "one-time";
   amount_paise: number;
   currency: string;
   status: "active" | "cancelled" | "expired";

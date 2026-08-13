@@ -7,6 +7,7 @@ import { AppShell } from "@/components/app-shell";
 import { ResumeUpload } from "@/components/resume-upload";
 import { ReadinessReportView } from "@/components/readiness-report";
 import { MembershipPaywall } from "@/components/membership-paywall";
+import { SessionsPanel } from "@/components/sessions-panel";
 import { getLatestAnalysis, analysisToPayload } from "@/lib/analysis";
 import { getSubscription, isSubscriptionActive } from "@/lib/subscription";
 
@@ -122,6 +123,9 @@ export default async function ResumeAnalysisPage() {
             </div>
 
             <ReadinessReportView report={analysisToPayload(latest)} />
+            <div className="mt-8">
+              <SessionsPanel plan={sub?.plan ?? null} email={email} />
+            </div>
             <div className="mt-10">
               <div className="mb-4 flex items-center gap-3">
                 <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-600/20">

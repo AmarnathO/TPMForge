@@ -57,8 +57,7 @@ export function MembershipPaywall({
               Choose your membership
             </p>
             <p className="mt-1 text-xs text-zinc-500">
-              Unlocks your full reports and roadmaps plus everything else in
-              your dashboard.
+              Unlocks your full reports, roadmap, and 1:1 mentor sessions.
             </p>
           </div>
           <SubscribeCard email={email} />

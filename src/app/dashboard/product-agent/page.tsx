@@ -50,6 +50,7 @@ export default async function ProductAgentPage() {
           initial={initial}
           subscribed={isSubscriptionActive(sub)}
           email={email}
+          plan={sub?.plan ?? null}
         />
       </div>
     </AppShell>

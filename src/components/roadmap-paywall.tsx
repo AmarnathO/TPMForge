@@ -60,7 +60,7 @@ export function RoadmapPaywall({ email }: { email: string }) {
               Choose your membership
             </p>
             <p className="mt-1 text-xs text-zinc-500">
-              Unlocks your roadmap plus everything else in your dashboard.
+              Unlocks your roadmap, full reports, and 1:1 mentor sessions.
             </p>
           </div>
           <SubscribeCard email={email} />
