@@ -17,7 +17,7 @@ export default function BlogLayout({
           <nav className="flex items-center gap-4">
             <Link
               href="/blog"
-              className="text-sm font-medium text-zinc-300 transition hover:text-zinc-100"
+              className="rounded-lg bg-indigo-600/15 px-4 py-2 text-sm font-medium text-indigo-300 transition hover:text-indigo-200"
             >
               Blog
             </Link>

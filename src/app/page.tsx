@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { Reveal } from "@/components/reveal";
 import { Logo } from "@/components/logo";
+import { LandingNav } from "@/components/landing-nav";
 import { NewsletterForm } from "@/components/newsletter-form";
 import { cn, formatINR } from "@/lib/utils";
 
@@ -160,23 +161,7 @@ export default function Home() {
             <Logo size={32} withWordmark />
           </Link>
 
-          <div className="hidden items-center gap-1 md:flex">
-            {[
-              ["How it works", "#how-it-works"],
-              ["Features", "#features"],
-              ["Pricing", "#pricing"],
-              ["Blog", "/blog"],
-            ].map(([label, href]) => (
-              <a
-                key={href}
-                href={href}
-                className="rounded-lg px-4 py-2 text-sm text-zinc-400 transition hover:text-zinc-100"
-              >
-                {label}
-              </a>
-            ))}
-          </div>
-
+          <LandingNav />
           <div className="flex items-center gap-3">
             <Link
               href="/login"

@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { signOut } from "@/app/actions/auth";
 import { Logo } from "@/components/logo";
 
@@ -20,6 +23,10 @@ export function AppShell({
     { href: "/dashboard/progress", label: "Progress" },
   ];
 
+  const pathname = usePathname();
+  const isActive = (href: string) =>
+    href === "/dashboard" ? pathname === "/dashboard" : pathname.startsWith(href);
+
   return (
     <div className="flex min-h-screen flex-col">
       <header className="sticky top-0 z-40 border-b border-zinc-800 bg-zinc-950/80 backdrop-blur">
@@ -33,7 +40,12 @@ export function AppShell({
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="rounded-lg px-3 py-2 text-sm text-zinc-400 transition hover:bg-zinc-900 hover:text-zinc-100"
+                  aria-current={isActive(link.href) ? "page" : undefined}
+                  className={`rounded-lg px-3 py-2 text-sm transition ${
+                    isActive(link.href)
+                      ? "bg-indigo-600/15 font-medium text-indigo-200"
+                      : "text-zinc-400 hover:bg-zinc-900 hover:text-zinc-100"
+                  }`}
                 >
                   {link.label}
                 </Link>
