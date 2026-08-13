@@ -1,0 +1,21 @@
+src/components/landing-nav.tsx
+  s_9b7382b5b7b0d1::t_9e4ec351961ddd 6,18,39-47,49-51,55-56,60-74,76-137
+src/components/app-shell.tsx
+  s_9b7382b5b7b0d1::t_5f92e3999db87d 5-6,17-18,34-40,46,55,66,74-81,85-128
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "6cbe8a9bcfdc7e31cf432cda5b02b5ab2b117b78",
+  "prompts": {},
+  "sessions": {
+    "s_9b7382b5b7b0d1": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_0281697f1ffennuLtHOO7dvmcF",
+        "model": "deepseek-v4-flash-free"
+      },
+      "human_author": "Amarnath Ojha <amarnathojha071@gmail.com>"
+    }
+  }
+}
